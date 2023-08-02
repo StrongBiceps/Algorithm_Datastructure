@@ -1,7 +1,5 @@
 # Algorithm_Datastructure
 
-# Datastructure_Algorithm
-
 # 2023.08.02
 
 # Map_Reduce using STL (STL을 이용)
