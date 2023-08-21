@@ -161,6 +161,8 @@ NP-완전 문제이지만, 그리디 방식이 유용한 근사치를 제공하�
 
 이전에 공부했던 Tree와 살짝 다른 구조를 가지고 있다.
 
+# 2023.08.21
+
 # BehaviorTree
 
 언리얼 엔진의 BehaviorTree를 간단하게 구현한 예제이다. Selector, Sequence, Decorator, ActionNode 등이 있고 간단한 처리가 가능하다. 
