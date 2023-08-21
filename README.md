@@ -160,3 +160,13 @@ NP-완전 문제이지만, 그리디 방식이 유용한 근사치를 제공하�
 # Normal_Tree (색다른 버전의 트리)
 
 이전에 공부했던 Tree와 살짝 다른 구조를 가지고 있다.
+
+# BehaviorTree
+
+언리얼 엔진의 BehaviorTree를 간단하게 구현한 예제이다. Selector, Sequence, Decorator, ActionNode 등이 있고 간단한 처리가 가능하다. 
+
+N항 트리 구조를 사용했다.
+
+# DungeonGenerator
+
+N항 트리를 사용한 리눅스 파일 시스템 코드를 변형하여 TXT_RPG에 사용할 DungeonGenerator를 구성했다. 
