@@ -4,24 +4,25 @@
 
 using namespace std;
 
-//º§¸¸-Æ÷µå ¾Ë°í¸®ÁòÀ¸·Î S¸¦ Ãß°¡ÇÑ ±×·¡ÇÁÀÇ °Å¸® °ªÀ» ¾÷µ¥ÀÌÆ®ÇÑ´Ù.
-// ->°¢ ¿¡ÁöÀÇ °¡ÁßÄ¡¸¦ º¯Çü½ÄÀ» ÀÌ¿ëÇÏ¿© º¯ÇüÇÑ´Ù.
-// ->´ÙÀÍ½ºÆ®¶ó ¾Ë°í¸®ÁòÀ¸·Î °¡ÁßÄ¡°¡ ¾çÀÇ Á¤¼ö °ªÀÌµÈ ±×·¡ÇÁÀÇ °¢ Á¤Á¡ÀÇ ÃÖ´Ü °Å¸®¸¦ °è»ê
-// ->°è»êµÈ °Å¸® °ª¿¡ ´Ù½Ã ¿ªÀ¸·Î º¯Çü½ÄÀ» Àû¿ëÇÏ¿© ¿ø·¡ °Å¸® °ªÀ¸·Î º¯È¯
-// Áï À½¼ö °¡ÁßÄ¡°¡ ÀÖ´Â ±×·¡ÇÁ¸¦ ´ÙÀÍ½ºÆ®¶ó ¾Ë°í¸®ÁòÀ» »ç¿ëÇÏ¿© °Å¸® °ªÀ» ±¸ÇÒ ¼ö ÀÖ°Ô ÇÑ 
-// ¾Ë°í¸®ÁòÀÌ´Ù.
+//ë²¨ë§Œ-í¬ë“œ ì•Œê³ ë¦¬ì¦˜ìœ¼ë¡œ Së¥¼ ì¶”ê°€í•œ ê·¸ëž˜í”„ì˜ ê±°ë¦¬ ê°’ì„ ì—…ë°ì´íŠ¸í•œë‹¤.
+// ->ê° ì—ì§€ì˜ ê°€ì¤‘ì¹˜ë¥¼ ë³€í˜•ì‹ì„ ì´ìš©í•˜ì—¬ ë³€í˜•í•œë‹¤.
+// ->ë‹¤ìµìŠ¤íŠ¸ë¼ ì•Œê³ ë¦¬ì¦˜ìœ¼ë¡œ ê°€ì¤‘ì¹˜ê°€ ì–‘ì˜ ì •ìˆ˜ ê°’ì´ëœ ê·¸ëž˜í”„ì˜ ê° ì •ì ì˜ ìµœë‹¨ ê±°ë¦¬ë¥¼ ê³„ì‚°
+// ->ê³„ì‚°ëœ ê±°ë¦¬ ê°’ì— ë‹¤ì‹œ ì—­ìœ¼ë¡œ ë³€í˜•ì‹ì„ ì ìš©í•˜ì—¬ ì›ëž˜ ê±°ë¦¬ ê°’ìœ¼ë¡œ ë³€í™˜
+// ì¦‰ ìŒìˆ˜ ê°€ì¤‘ì¹˜ê°€ ìžˆëŠ” ê·¸ëž˜í”„ë¥¼ ë‹¤ìµìŠ¤íŠ¸ë¼ ì•Œê³ ë¦¬ì¦˜ì„ ì‚¬ìš©í•˜ì—¬ ê±°ë¦¬ ê°’ì„ êµ¬í•  ìˆ˜ ìžˆê²Œ í•œ 
+// ì•Œê³ ë¦¬ì¦˜ì´ë‹¤.
 
-//Á¤Á¡ S¸¦ Ãß°¡ÇÏ´Â ÀÌÀ¯´Â °¡ÁßÄ¡°¡ 0ÀÎ ¿¡Áö¸¦ °¢ Á¤Á¡¿¡ ¿¬°áÇÔÀ¸·Î½á °Å¸®ÀÇ °ªÀ» ¸ðµÎ 0ÀÌ°Å³ª À½¼ö·Î ¹Ù²ãÁÖ°í,
-//¶ÇÇÑ S¸¦ ¸ðµç ±×·¡ÇÁ¿¡ ¿¬°áÇßÀ¸¹Ç·Î ¸ðµç °æ·Î°¡ S·ÎºÎÅÍ ½ÃÀÛÇÏ°í, ÀÌµ¿ °æ·Î»ó¿¡¼­ °¢ Á¤Á¡ÀÇ °Å¸® °ªÀÌ ÀÏÁ¤ÇÑ °ü°è¸¦
-//À¯ÁöÇÑ´Ù. ÀÌ·Î ÀÎÇØ¼­ º¯Çü½ÄÀ» Àû¿ëÇßÀ» ¶§ °Å¸® °ªÀÌ ¼­·Î »ó¼âµÈ´Ù. 
+//ì •ì  Së¥¼ ì¶”ê°€í•˜ëŠ” ì´ìœ ëŠ” ê°€ì¤‘ì¹˜ê°€ 0ì¸ ì—ì§€ë¥¼ ê° ì •ì ì— ì—°ê²°í•¨ìœ¼ë¡œì¨ ê±°ë¦¬ì˜ ê°’ì„ ëª¨ë‘ 0ì´ê±°ë‚˜ ìŒìˆ˜ë¡œ ë°”ê¿”ì£¼ê³ ,
+//ë˜í•œ Së¥¼ ëª¨ë“  ê·¸ëž˜í”„ì— ì—°ê²°í–ˆìœ¼ë¯€ë¡œ ëª¨ë“  ê²½ë¡œê°€ Së¡œë¶€í„° ì‹œìž‘í•˜ê³ , ì´ë™ ê²½ë¡œìƒì—ì„œ ê° ì •ì ì˜ ê±°ë¦¬ ê°’ì´ ì¼ì •í•œ ê´€ê³„ë¥¼
+//ìœ ì§€í•œë‹¤. ì´ë¡œ ì¸í•´ì„œ ë³€í˜•ì‹ì„ ì ìš©í–ˆì„ ë•Œ ê±°ë¦¬ ê°’ì´ ì„œë¡œ ìƒì‡„ëœë‹¤. 
 
-//°á±¹ S¸¦ Ãß°¡ÇÏ´Â ÀÌÀ¯´Â º¯Çü½ÄÀ» ÅëÇØ¼­ ¸ðµç ¿¡ÁöÀÇ °¡ÁßÄ¡ °ªÀ» ¾ç¼ö·Î ¹Ù²ãÁÖ±â À§ÇØ¼­´Ù.
-//S°¡ Ãß°¡µÈ »óÅÂ¿¡¼­ º§¸¸-Æ÷µå ¾Ë°í¸®ÁòÀ» µ¹¸®¸é ¸ðµç °Å¸® °ªÀÌ À½¼ö°¡ µÈ´Ù. °Å±â¿¡ º¯Çü½ÄÀ» Àû¿ëÇÏ¸é
-//°¡ÁßÄ¡¿¡ -(À½¼ö) = ¾ç¼ö ¸¦ ´õÇØÁÖ´Â ½ÄÀÌ µÇ¹Ç·Î ¸ðµç ¿¡ÁöÀÇ °¡ÁßÄ¡°¡ 0 ÀÌ»óÀÇ °ªÀ¸·Î ¹Ù²î°Ô µÇ°í
-//°Å¸® °ªµµ À½¼ö°¡ ³ª¿ÀÁö ¾Ê°Ô µÇ´Â °ÍÀÌ´Ù. µû¶ó¼­ ´ÙÀÍ½ºÆ®¶ó ¾Ë°í¸®ÁòÀ» »ç¿ëÇÒ ¼ö ÀÖ°Ô µÈ´Ù.
-//´õ¹Ì Á¤Á¡À» Ãß°¡ÇÏÁö ¾Ê°í Æ¯Á¤ Á¤Á¡À» Áß½ÉÀ¸·Î º¯Çü½ÄÀ» Àû¿ëÇÒ ¼ö ¾ø´Ù. ÀÏ´Ü ¸ðµç Á¤Á¡°ú ¿¬°áµÈ
-//Áß½É Á¤Á¡ÀÌ ¾ø°í, ÀÖ´Ù°í ÇÏ´õ¶ó°í ¸ðµç ¿¡ÁöÀÇ °¡ÁßÄ¡°¡ 0Àº ¾Æ´Ï±â ¶§¹®¿¡ »ó¼â¸¦ À¯µµÇÒ ¼ö ¾ø´Ù.
-//¶ÇÇÑ ¿¬°áµÈ ¸ðµç ¿¡Áö°¡ 0ÀÌ¾î¾ß 
+//ê²°êµ­ Së¥¼ ì¶”ê°€í•˜ëŠ” ì´ìœ ëŠ” ë³€í˜•ì‹ì„ í†µí•´ì„œ ëª¨ë“  ì—ì§€ì˜ ê°€ì¤‘ì¹˜ ê°’ì„ ì–‘ìˆ˜ë¡œ ë°”ê¿”ì£¼ê¸° ìœ„í•´ì„œë‹¤.
+//Sê°€ ì¶”ê°€ëœ ìƒíƒœì—ì„œ ë²¨ë§Œ-í¬ë“œ ì•Œê³ ë¦¬ì¦˜ì„ ëŒë¦¬ë©´ ëª¨ë“  ê±°ë¦¬ ê°’ì´ ìŒìˆ˜ê°€ ëœë‹¤. ê±°ê¸°ì— ë³€í˜•ì‹ì„ ì ìš©í•˜ë©´
+//ê°€ì¤‘ì¹˜ì— -(ìŒìˆ˜) = ì–‘ìˆ˜ ë¥¼ ë”í•´ì£¼ëŠ” ì‹ì´ ë˜ë¯€ë¡œ ëª¨ë“  ì—ì§€ì˜ ê°€ì¤‘ì¹˜ê°€ 0 ì´ìƒì˜ ê°’ìœ¼ë¡œ ë°”ë€Œê²Œ ë˜ê³ 
+//ê±°ë¦¬ ê°’ë„ ìŒìˆ˜ê°€ ë‚˜ì˜¤ì§€ ì•Šê²Œ ë˜ëŠ” ê²ƒì´ë‹¤. ë”°ë¼ì„œ ë‹¤ìµìŠ¤íŠ¸ë¼ ì•Œê³ ë¦¬ì¦˜ì„ ì‚¬ìš©í•  ìˆ˜ ìžˆê²Œ ëœë‹¤.
+//ë”ë¯¸ ì •ì ì„ ì¶”ê°€í•˜ì§€ ì•Šê³  íŠ¹ì • ì •ì ì„ ì¤‘ì‹¬ìœ¼ë¡œ ë³€í˜•ì‹ì„ ì ìš©í•  ìˆ˜ ì—†ë‹¤. ì¼ë‹¨ ëª¨ë“  ì •ì ê³¼ ì—°ê²°ëœ
+//ì¤‘ì‹¬ ì •ì ì´ ì—†ê³ , ìžˆë‹¤ê³  í•˜ë”ë¼ê³  ëª¨ë“  ì—ì§€ì˜ ê°€ì¤‘ì¹˜ê°€ 0ì€ ì•„ë‹ˆê¸° ë•Œë¬¸ì— ìƒì‡„ë¥¼ ìœ ë„í•  ìˆ˜ ì—†ë‹¤.
+//ë˜í•œ ì—°ê²°ëœ ëª¨ë“  ì—ì§€ê°€ 0ì´ì–´ì•¼ ëª¨ë“  ì •ì ì˜ ê±°ë¦¬ ê°’ì´ ìŒìˆ˜ê°€ ë˜ë¯€ë¡œ ë‚˜ì¤‘ì— ë³€í˜•ì‹ì„ í†µí•´ì„œ
+//ê°€ì¤‘ì¹˜ë¥¼ ì–‘ìˆ˜ë¡œ ë°”ê¾¸ëŠ” ë° ì‚¬ìš©í•  ìˆ˜ ìžˆë‹¤.
 struct Edge
 {
 	int src;
@@ -45,11 +46,11 @@ bool HasNegativeCycle(const vector<Edge>& edges, vector<int> distance)
 	return false;
 }
 
-//¿¡Áö ¸®½ºÆ® edges¿Í Á¤Á¡ °³¼ö V¸¦ ÀÎÀÚ·Î ¹Þ°í, ½ÃÀÛ Á¤Á¡ ¹øÈ£ Start´Â »ç¿ëÇÏÁö ¾Ê´Â´Ù.
+//ì—ì§€ ë¦¬ìŠ¤íŠ¸ edgesì™€ ì •ì  ê°œìˆ˜ Vë¥¼ ì¸ìžë¡œ ë°›ê³ , ì‹œìž‘ ì •ì  ë²ˆí˜¸ StartëŠ” ì‚¬ìš©í•˜ì§€ ì•ŠëŠ”ë‹¤.
 vector<int> BellmanFord(vector<Edge> edges, int V)
 {
-	//´õ¹Ì Á¤Á¡ S¸¦ Ãß°¡ÇÑ´Ù. ´õ¹Ì Á¤Á¡ S¸¦ Ãß°¡ÇÏ¹Ç·Î °Å¸® ¹è¿­Àº(V+1)Å©±â·Î ÁØºñÇÏ°í, SÁ¤Á¡°ú ³ª¸ÓÁö Á¤Á¡ »çÀÌ¿¡
-	//°¡ÁßÄ¡°¡ 0ÀÎ ¿¡Áö¸¦ Ãß°¡ÇÑ´Ù.
+	//ë”ë¯¸ ì •ì  Së¥¼ ì¶”ê°€í•œë‹¤. ë”ë¯¸ ì •ì  Së¥¼ ì¶”ê°€í•˜ë¯€ë¡œ ê±°ë¦¬ ë°°ì—´ì€(V+1)í¬ê¸°ë¡œ ì¤€ë¹„í•˜ê³ , Sì •ì ê³¼ ë‚˜ë¨¸ì§€ ì •ì  ì‚¬ì´ì—
+	//ê°€ì¤‘ì¹˜ê°€ 0ì¸ ì—ì§€ë¥¼ ì¶”ê°€í•œë‹¤.
 	vector<int> distance(V + 1, UNKNOWN);
 
 	int s = V;
@@ -60,19 +61,19 @@ vector<int> BellmanFord(vector<Edge> edges, int V)
 
 	distance[s] = 0;
 
-	// Á¤Á¡ °³¼ö°¡ V + 1°³ ÀÌ¹Ç·Î V¹ø ¹Ýº¹
+	// ì •ì  ê°œìˆ˜ê°€ V + 1ê°œ ì´ë¯€ë¡œ Vë²ˆ ë°˜ë³µ
 	for (int i = 0; i < V; i++)
 	{
 		for (auto& e : edges)
 		{
-			// ¿¡ÁöÀÇ ½ÃÀÛ Á¤Á¡ÀÇ °Å¸® °ªÀÌ UNKNOWNÀÌ¸é ½ºÅµ
+			// ì—ì§€ì˜ ì‹œìž‘ ì •ì ì˜ ê±°ë¦¬ ê°’ì´ UNKNOWNì´ë©´ ìŠ¤í‚µ
 			if (distance[e.src] == UNKNOWN)
 				continue;
 
-			// ÀÎÁ¢ÇÑ Á¤Á¡ÀÇ °Å¸® °ªÀÌ »õ·Î¿î °æ·Î¿¡ ÀÇÇÑ °Å¸® °ªº¸´Ù Å©¸é
-			// °Å¸® °ªÀ» ¾÷µ¥ÀÌÆ®ÇÔ.
-			// º§¸¸-Æ÷µå ¾Ë°í¸®Áò¿¡¼­ ¹ÝÈ¯µÇ´Â ¸ðµç °Å¸® °ªÀº
-			//distance[e.dst] <= distance[e.src] + e.weightÀ» ¸¸Á·ÇÔ
+			// ì¸ì ‘í•œ ì •ì ì˜ ê±°ë¦¬ ê°’ì´ ìƒˆë¡œìš´ ê²½ë¡œì— ì˜í•œ ê±°ë¦¬ ê°’ë³´ë‹¤ í¬ë©´
+			// ê±°ë¦¬ ê°’ì„ ì—…ë°ì´íŠ¸í•¨.
+			// ë²¨ë§Œ-í¬ë“œ ì•Œê³ ë¦¬ì¦˜ì—ì„œ ë°˜í™˜ë˜ëŠ” ëª¨ë“  ê±°ë¦¬ ê°’ì€
+			//distance[e.dst] <= distance[e.src] + e.weightì„ ë§Œì¡±í•¨
 			if (distance[e.dst] > distance[e.src] + e.weight)
 			{
 				distance[e.dst] = distance[e.src] + e.weight;
@@ -80,10 +81,10 @@ vector<int> BellmanFord(vector<Edge> edges, int V)
 		}
 	}
 
-	// À½¼ö °¡ÁßÄ¡ »çÀÌÅ¬ÀÌ ÀÖ´Â Áö °Ë»ç
+	// ìŒìˆ˜ ê°€ì¤‘ì¹˜ ì‚¬ì´í´ì´ ìžˆëŠ” ì§€ ê²€ì‚¬
 	if (HasNegativeCycle(edges, distance))
 	{
-		cout << "À½¼ö °¡ÁßÄ¡ »çÀÌÅ¬ ¹ß°ß!" << endl;
+		cout << "ìŒìˆ˜ ê°€ì¤‘ì¹˜ ì‚¬ì´í´ ë°œê²¬!" << endl;
 		return {};
 	}
 
@@ -95,8 +96,8 @@ int GetMinDistance(vector<int>& distance, vector<bool>& visited)
 	int minDistance = UNKNOWN;
 	int minIndex = -1;
 
-	//Ã³À½ È£ÃâµÇ¾úÀ» ¶§´Â start¸¸ °Å¸®°¡ 0ÀÌ¹Ç·Î ´Ù¸¥ Á¤Á¡¿¡ ´ëÇØ¼­´Â
-	//if¹®À» ¼öÇàÇÏÁö ¾Ê°í minDistance´Â 0ÀÌ µÇ°í minIndex´Â startÀÇ index°¡ µÈ´Ù.
+	//ì²˜ìŒ í˜¸ì¶œë˜ì—ˆì„ ë•ŒëŠ” startë§Œ ê±°ë¦¬ê°€ 0ì´ë¯€ë¡œ ë‹¤ë¥¸ ì •ì ì— ëŒ€í•´ì„œëŠ”
+	//ifë¬¸ì„ ìˆ˜í–‰í•˜ì§€ ì•Šê³  minDistanceëŠ” 0ì´ ë˜ê³  minIndexëŠ” startì˜ indexê°€ ëœë‹¤.
 	for (int i = 0; i < distance.size(); i++)
 	{
 		if (!visited[i] && distance[i] <= minDistance)
@@ -109,9 +110,9 @@ int GetMinDistance(vector<int>& distance, vector<bool>& visited)
 	return minIndex;
 }
 
-//´ÙÀÍ½ºÆ®¶ó ¾Ë°í¸®Áò ±¸ÇöÀº ´Ü¼øÈ÷ for¹®À» »ç¿ëÇØ¼­ ±¸ÇöÇÒ ¼ö ÀÖ´Ù. ´ÙÀÍ½ºÆ®¶ó ¾Ë°í¸®ÁòÀº
-//¸Å ´Ü°è¸¶´Ù ÃÖ¼Ò °Å¸® °ªÀ» °®´Â Á¤Á¡À» Ã£¾Æ¾ß ÇÑ´Ù. ÀÌÀü¿¡´Â ¿ì¼±¼øÀ§ Å¥¸¦ »ç¿ëÇßÁö¸¸, ¿©±â¼­´Â
-//´Ü¼øÈ÷ GetMinDistanceÇÔ¼ö¸¦ »ç¿ëÇÏ¿© ÃÖ¼Ò °Å¸® Á¤Á¡À» Ã£µµ·Ï ÇÑ´Ù.
+//ë‹¤ìµìŠ¤íŠ¸ë¼ ì•Œê³ ë¦¬ì¦˜ êµ¬í˜„ì€ ë‹¨ìˆœížˆ forë¬¸ì„ ì‚¬ìš©í•´ì„œ êµ¬í˜„í•  ìˆ˜ ìžˆë‹¤. ë‹¤ìµìŠ¤íŠ¸ë¼ ì•Œê³ ë¦¬ì¦˜ì€
+//ë§¤ ë‹¨ê³„ë§ˆë‹¤ ìµœì†Œ ê±°ë¦¬ ê°’ì„ ê°–ëŠ” ì •ì ì„ ì°¾ì•„ì•¼ í•œë‹¤. ì´ì „ì—ëŠ” ìš°ì„ ìˆœìœ„ íë¥¼ ì‚¬ìš©í–ˆì§€ë§Œ, ì—¬ê¸°ì„œëŠ”
+//ë‹¨ìˆœížˆ GetMinDistanceí•¨ìˆ˜ë¥¼ ì‚¬ìš©í•˜ì—¬ ìµœì†Œ ê±°ë¦¬ ì •ì ì„ ì°¾ë„ë¡ í•œë‹¤.
 vector<int> Dijkstra(vector<Edge> edges, int V, int start)
 {
 	vector<int> distance(V, UNKNOWN);
@@ -121,27 +122,27 @@ vector<int> Dijkstra(vector<Edge> edges, int V, int start)
 
 	for (int i = 0; i < V - 1; i++)
 	{
-		// ¹æ¹®ÇÏÁö ¾ÊÀº Á¤Á¡ Áß¿¡¼­ ÃÖ¼Ò °Å¸® Á¤Á¡À» Ã£À½
-		//Ã³À½¿¡´Â ½ÃÀÛ Á¤Á¡ÀÇ Index°¡ ¹ÝÈ¯µÊ
-		//µÎ ¹øÂ° ¹Ýº¹¿¡¼­´Â ÀÌÀü ¹Ýº¹¿¡¼­ÀÇ currÀÇ ÀÎÁ¢ Á¤Á¡µéÀÇ °Å¸®
-		//°ªÀÌ ¾÷µ¥ÀÌÆ®µÈ »óÅÂÀÌ´Ù. ³ª¸ÓÁö Á¤Á¡Àº UNKNOWNÀÌ¹Ç·Î 
-		//ÃÖ¼Ò °Å¸® Á¤Á¡µµ ÀÌÀü currÀÇ ÀÎÁ¢ Á¤Á¡Áß ÇÏ³ª°¡ ¹ÝÈ¯µÉ °ÍÀÌ´Ù.
-		//±×µéÀÇ °Å¸® °ªÀº ¹«Á¶°Ç UNKNOWNº¸´Ù´Â ÀÛ±â ¶§¹®ÀÌ´Ù.
+		// ë°©ë¬¸í•˜ì§€ ì•Šì€ ì •ì  ì¤‘ì—ì„œ ìµœì†Œ ê±°ë¦¬ ì •ì ì„ ì°¾ìŒ
+		//ì²˜ìŒì—ëŠ” ì‹œìž‘ ì •ì ì˜ Indexê°€ ë°˜í™˜ë¨
+		//ë‘ ë²ˆì§¸ ë°˜ë³µì—ì„œëŠ” ì´ì „ ë°˜ë³µì—ì„œì˜ currì˜ ì¸ì ‘ ì •ì ë“¤ì˜ ê±°ë¦¬
+		//ê°’ì´ ì—…ë°ì´íŠ¸ëœ ìƒíƒœì´ë‹¤. ë‚˜ë¨¸ì§€ ì •ì ì€ UNKNOWNì´ë¯€ë¡œ 
+		//ìµœì†Œ ê±°ë¦¬ ì •ì ë„ ì´ì „ currì˜ ì¸ì ‘ ì •ì ì¤‘ í•˜ë‚˜ê°€ ë°˜í™˜ë  ê²ƒì´ë‹¤.
+		//ê·¸ë“¤ì˜ ê±°ë¦¬ ê°’ì€ ë¬´ì¡°ê±´ UNKNOWNë³´ë‹¤ëŠ” ìž‘ê¸° ë•Œë¬¸ì´ë‹¤.
 		int curr = GetMinDistance(distance, visited);
 
-		//currÁ¤Á¡À» ¹æ¹® Ã³¸®ÇÑ´Ù.
+		//currì •ì ì„ ë°©ë¬¸ ì²˜ë¦¬í•œë‹¤.
 		visited[curr] = true;
 
 		for (auto& e : edges)
 		{
-			//currÁ¤Á¡ÀÇ ÀÎÁ¢ÇÑ Á¤Á¡¸¸ °í·Á
+			//currì •ì ì˜ ì¸ì ‘í•œ ì •ì ë§Œ ê³ ë ¤
 			if (e.src != curr)
 				continue;
 
-			// ÀÌ¹Ì ¹æ¹®ÇßÀ¸¸é ¹«½Ã
-			//º§¸¸ Æ÷µå¿Í ´Ù¸¥ Á¡ÀÌ ¿©±â¿¡ ÀÖ´Ù. 
-			//´ÙÀÍ½ºÆ®¶ó´Â ÀÌ¹Ì ¹æ¹®ÇÑ Á¤Á¡¿¡ ´ëÇØ¼­´Â °Å¸®¸¦ ¾÷µ¥ÀÌÆ®ÇÏÁö ¾Ê´Â´Ù.
-			//ÇÏÁö¸¸ À½¼ö °¡ÁßÄ¡°¡ ¾ø±â ¶§¹®¿¡ ¹æ¹®ÇÑ Á¤Á¡¿¡ ´ëÇØ¼­´Â ¹«½ÃÇØµµ ¹«¹æÇÏ´Ù.
+			// ì´ë¯¸ ë°©ë¬¸í–ˆìœ¼ë©´ ë¬´ì‹œ
+			//ë²¨ë§Œ í¬ë“œì™€ ë‹¤ë¥¸ ì ì´ ì—¬ê¸°ì— ìžˆë‹¤. 
+			//ë‹¤ìµìŠ¤íŠ¸ë¼ëŠ” ì´ë¯¸ ë°©ë¬¸í•œ ì •ì ì— ëŒ€í•´ì„œëŠ” ê±°ë¦¬ë¥¼ ì—…ë°ì´íŠ¸í•˜ì§€ ì•ŠëŠ”ë‹¤.
+			//í•˜ì§€ë§Œ ìŒìˆ˜ ê°€ì¤‘ì¹˜ê°€ ì—†ê¸° ë•Œë¬¸ì— ë°©ë¬¸í•œ ì •ì ì— ëŒ€í•´ì„œëŠ” ë¬´ì‹œí•´ë„ ë¬´ë°©í•˜ë‹¤.
 			if (visited[e.dst])
 				continue;
 
@@ -158,34 +159,34 @@ vector<int> Dijkstra(vector<Edge> edges, int V, int start)
 
 void Johnson(vector<Edge> edges, int V)
 {
-	// ´õ¹Ì Á¤Á¡À» Ãß°¡ÇÑ ±×·¡ÇÁ¿¡¼­ ÃÖ´Ü °Å¸®¸¦ °è»ê
+	// ë”ë¯¸ ì •ì ì„ ì¶”ê°€í•œ ê·¸ëž˜í”„ì—ì„œ ìµœë‹¨ ê±°ë¦¬ë¥¼ ê³„ì‚°
 	vector<int> h = BellmanFord(edges, V);
 
 	if (h.empty())
 		return;
 
-	// ¿¡Áö °¡ÁßÄ¡ Àç¼³Á¤
-	// S¸¦ Ãß°¡ÇÑ ±×·¡ÇÁ¸¦ º§¸¸-Æ÷µå ¾Ë°í¸®ÁòÀ» »ç¿ëÇÏ¸é
-	// ¸ðµç °Å¸® °ªÀÌ À½¼ö·Î ¹Ù²î°Ô µÇ°í 
-	// °¡ÁßÄ¡ º¯È¯½ÄÀ» °Å±â¿¡ Àû¿ëÇÏ¸é
-	//¸ðµç ¿¡ÁöÀÇ °¡ÁßÄ¡°¡ 0ÀÌ»óÀ¸·Î º¯°æµÈ´Ù(Ã¥ÀÇ ¸Á¿ø¼Ó¼º ½Ä Âü°í).
+	// ì—ì§€ ê°€ì¤‘ì¹˜ ìž¬ì„¤ì •
+	// Së¥¼ ì¶”ê°€í•œ ê·¸ëž˜í”„ë¥¼ ë²¨ë§Œ-í¬ë“œ ì•Œê³ ë¦¬ì¦˜ì„ ì‚¬ìš©í•˜ë©´
+	// ëª¨ë“  ê±°ë¦¬ ê°’ì´ ìŒìˆ˜ë¡œ ë°”ë€Œê²Œ ë˜ê³  
+	// ê°€ì¤‘ì¹˜ ë³€í™˜ì‹ì„ ê±°ê¸°ì— ì ìš©í•˜ë©´
+	//ëª¨ë“  ì—ì§€ì˜ ê°€ì¤‘ì¹˜ê°€ 0ì´ìƒìœ¼ë¡œ ë³€ê²½ëœë‹¤(ì±…ì˜ ë§ì›ì†ì„± ì‹ ì°¸ê³ ).
 	for (auto& e : edges)
 	{
 		e.weight += (h[e.src] - h[e.dst]);
 	}
 
-	// ¸ðµç Á¤Á¡µé »çÀÌÀÇ ÃÖ´Ü °Å¸®¸¦ ÀúÀå
+	// ëª¨ë“  ì •ì ë“¤ ì‚¬ì´ì˜ ìµœë‹¨ ê±°ë¦¬ë¥¼ ì €ìž¥
 	vector<vector<int>> shortest(V);
 
-	//¿¡ÁöÀÇ °¡ÁßÄ¡°¡ º¯°æµÈ »óÅÂ¿¡¼­ ´ÙÀÍ½ºÆ®¶ó ¾Ë°í¸®ÁòÀ» È£ÃâÇÏ¿© °¢ Á¤Á¡ÀÇ °Å¸® °ªÀ» ´Ù½Ã °»½ÅÇÑ´Ù.
+	//ì—ì§€ì˜ ê°€ì¤‘ì¹˜ê°€ ë³€ê²½ëœ ìƒíƒœì—ì„œ ë‹¤ìµìŠ¤íŠ¸ë¼ ì•Œê³ ë¦¬ì¦˜ì„ í˜¸ì¶œí•˜ì—¬ ê° ì •ì ì˜ ê±°ë¦¬ ê°’ì„ ë‹¤ì‹œ ê°±ì‹ í•œë‹¤.
 	for (int i = 0; i < V; i++)
 	{
 		shortest[i] = Dijkstra(edges, V, i);
 	}
 
-	// °¡ÁßÄ¡ º¯È¯ ¼ö½ÄÀ» ¿ªÀ¸·Î Àû¿ëÇÏ¿© ÃÖ´Ü °Å¸®¸¦ Ãâ·Â
-	//À§¿¡¼­ ±¸ÇÑ shortest´Â ÃÖÁ¾ ÃÖ´Ü °Å¸®´Â ¾Æ´Ï´Ù. ÀÌÀ¯´Â °¡ÁßÄ¡ º¯È¯ ¼ö½ÄÀ» »ç¿ëÇÏ¿© ¸ðµç 
-	//¿¡Áö °¡ÁßÄ¡¸¦ ¾ç¼ö·Î º¯È¯Çß±â ¶§¹®ÀÌ´Ù. µû¶ó¼­ °¡ÁßÄ¡ º¯È¯ ¼ö½ÄÀ» ¿ªÀ¸·Î Àû¿ëÇÏ¿© ½ÇÁ¦ ÃÖ´Ü °Å¸® °ªÀ» ´Ù½Ã °è»êÇØ¾ß ÇÑ´Ù.
+	// ê°€ì¤‘ì¹˜ ë³€í™˜ ìˆ˜ì‹ì„ ì—­ìœ¼ë¡œ ì ìš©í•˜ì—¬ ìµœë‹¨ ê±°ë¦¬ë¥¼ ì¶œë ¥
+	//ìœ„ì—ì„œ êµ¬í•œ shortestëŠ” ìµœì¢… ìµœë‹¨ ê±°ë¦¬ëŠ” ì•„ë‹ˆë‹¤. ì´ìœ ëŠ” ê°€ì¤‘ì¹˜ ë³€í™˜ ìˆ˜ì‹ì„ ì‚¬ìš©í•˜ì—¬ ëª¨ë“  
+	//ì—ì§€ ê°€ì¤‘ì¹˜ë¥¼ ì–‘ìˆ˜ë¡œ ë³€í™˜í–ˆê¸° ë•Œë¬¸ì´ë‹¤. ë”°ë¼ì„œ ê°€ì¤‘ì¹˜ ë³€í™˜ ìˆ˜ì‹ì„ ì—­ìœ¼ë¡œ ì ìš©í•˜ì—¬ ì‹¤ì œ ìµœë‹¨ ê±°ë¦¬ ê°’ì„ ë‹¤ì‹œ ê³„ì‚°í•´ì•¼ í•œë‹¤.
 	for (int i = 0; i < V; i++)
 	{
 		cout << i << ":\n";
@@ -194,8 +195,8 @@ void Johnson(vector<Edge> edges, int V)
 		{
 			if (shortest[i][j] != UNKNOWN)
 			{
-				//w(AB)+w(BC)+...+w(DE)+d[s,A]-d[s,E]ÀÌ¹Ç·Î d[s,A]´Â »©ÁÖ°í d[s,E]´Â ´õÇØÁÖ¸é ´Ù½Ã
-				//°¡ÁßÄ¡µéÀÇ ÇÕÀÇ ½ÄÀ¸·Î ¹Ù²ï´Ù.
+				//w(AB)+w(BC)+...+w(DE)+d[s,A]-d[s,E]ì´ë¯€ë¡œ d[s,A]ëŠ” ë¹¼ì£¼ê³  d[s,E]ëŠ” ë”í•´ì£¼ë©´ ë‹¤ì‹œ
+				//ê°€ì¤‘ì¹˜ë“¤ì˜ í•©ì˜ ì‹ìœ¼ë¡œ ë°”ë€ë‹¤.
 				shortest[i][j] += h[j] - h[i];
 
 				cout << "\t" << j << ": " << shortest[i][j] << endl;
@@ -206,10 +207,10 @@ void Johnson(vector<Edge> edges, int V)
 
 int main()
 {
-	int V = 5;              // Á¤Á¡ °³¼ö
-	vector<Edge> edges;     // ¿¡Áö Æ÷ÀÎÅÍÀÇ º¤ÅÍ
+	int V = 5;              // ì •ì  ê°œìˆ˜
+	vector<Edge> edges;     // ì—ì§€ í¬ì¸í„°ì˜ ë²¡í„°
 
-	vector<vector<int>> edge_map{ // {½ÃÀÛ Á¤Á¡, ¸ñÇ¥ Á¤Á¡, °¡ÁßÄ¡}
+	vector<vector<int>> edge_map{ // {ì‹œìž‘ ì •ì , ëª©í‘œ ì •ì , ê°€ì¤‘ì¹˜}
 		{0, 1, -7},
 		{1, 2, -2},
 		{2, 0, 10},
