@@ -33,6 +33,7 @@ void FillStack(int node, vector<bool>& visited,
 	//이제 5의 모든 자식이 끝났으므로 5가 스택에 들어간다. 8 7 3 4 6 5 이제 2도 끝났고 그다음 1- >0 순으로 들어가서
 	//최종 스택에 8 7 3 4 6 5 2 1 0 이 들어간다. 스택에 들어간 순서를 생각해보면 
 	//8 7 3 (강한 연결 요소 1) 4 6 5 2(강한 연결 요소2) 1 (강한 연결 요소3) 0 (강한 연결 요소 4)순으로 들어갔다.
+	cout << node << endl;
 	stack.push(node);
 }
 
@@ -88,13 +89,51 @@ vector<vector<int>> Kosaraju(int V, vector<vector<int>> adj)
 	vector<bool> visited(V, false);
 	stack<int> stack;
 
-	for (int i = 0; i < V; i++)
+	//순방향으로 순회했을 경우
+	for (int i = 0; i < V; ++i)
 	{
 		if (!visited[i])
 		{
 			FillStack(i, visited, adj, stack);
 		}
 	}
+
+	//역방향으로 순회했을 경우
+	/*for (int i = V-1; i >= 0; --i)
+	{
+		if (!visited[i])
+		{
+			FillStack(i, visited, adj, stack);
+		}
+	}*/
+
+	//강한 연결 요소 2,4,5,6 중 2부터 순회하고 다 끝난 뒤 0,1을 순회할 경우
+	/*for (int i = 2; i <V; ++i)
+	{
+		if (!visited[i])
+		{
+			FillStack(i, visited, adj, stack);
+		}
+	}
+	for (int i = 0; i <2 ; ++i)
+	{
+		if (!visited[i])
+		{
+			FillStack(i, visited, adj, stack);
+		}
+	}*/
+	//위 모든 경우에서 가장 먼저 스택에 들어가는 연결 요소는 3,8,7이다 즉 다른 연결 요소로 이동할 수 없는
+	//고립된 연결 요소가 가장 먼저 스택에 들어간다. 또한 스택에는 가장 먼저 들어가지만 역방향 그래프인 collect과정에서는
+	//가장 나중에 스택에서 pop된다. 따라서 0  1  2456  873 순으로 강한 연결 요소로 묶이게 된다.
+
+	//일단 다른 연결 요소로 이동할 수 없는 강한 연결 요소가 스택에 들어가는 이유는 간단하다. DFS방식을 사용하기 때문에
+	//연결된 정점들을 따라 가다가 빠져나올 수 없는 강한 연결 요소로 들어가게 되면 그 연결 요소부터 스택에 들어가게 된다.
+	//빠져나올 수 없는 경우에 for문을 벗어나기 때문이다.
+
+	//***정정
+	//고립된 강한 연결 요소가 스택에 가장 먼저 들어가는 경우는 고립된 연결 요소가 하나일 때만 그렇고, 2개 이상일 때는 모든 고립 강한 연결 요소가
+	//가장 먼저 들어가지는 않을 수 있다. 이 때에도 고립된 것이 가장 먼저 스택에 들어가는 것은 맞으나, 다른 고립된 요소들이 그 다음을 이어서 들어간다고
+	//보장할 수는 없다. Maze예제에 그러한 경우를 입력으로 설정해 놓았다.
 
 	//두 번째 DFS를 수행하기에 앞서 먼저 전치 그래프 transpose를 생성한다. 
 	vector<vector<int>> transpose = Transpose(V, adj);
@@ -130,19 +169,29 @@ vector<vector<int>> Kosaraju(int V, vector<vector<int>> adj)
 //main 함수에서 각각의 강한 연결 요소에 속하는 정점들의 번호를 화면에 출력한다.
 int main()
 {
-	int V = 9;
+	//int V = 9;
 
+	//vector<vector<int>> adj =
+	//	//index가 기준 정점이고 삽입된 배열이 연결된 정점들이다.
+	//{
+	//	{ 1, 3 },
+	//	{ 2, 4 },
+	//	{ 3, 5 },
+	//	{ 7 },
+	//	{ 2 },
+	//	{ 4, 6 },
+	//	{ 7, 2 },
+	//	{ 8 },
+	//	{ 3 }
+	//};
+
+	int V = 4;
 	vector<vector<int>> adj =
 	{
-		{ 1, 3 },
-		{ 2, 4 },
-		{ 3, 5 },
-		{ 7 },
-		{ 2 },
-		{ 4, 6 },
-		{ 7, 2 },
-		{ 8 },
-		{ 3 }
+		{1},
+		{2,3},
+		{2},
+		{3}
 	};
 
 	vector<vector<int>> connectedComponents = Kosaraju(V, adj);
