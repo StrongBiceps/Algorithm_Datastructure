@@ -646,6 +646,7 @@ if(memo[KEY] != UNKNOWN)와 같은 조건에 걸리는 경우가 거의 없을 �
 int Fibonacci(int n)
 
 {	
+
 	vector<int> DP(n+1,0);
 
 	DP[1]=1;
@@ -656,7 +657,7 @@ int Fibonacci(int n)
 
 		DP[i]=DP[i-1]+DP[i-2];
 
-	]
+	}
 
 	return DP[n];
 }
