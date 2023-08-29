@@ -2,9 +2,12 @@
 #include <iostream>
 #include <climits>
 
+//ë²¨ë§Œ í¬ë“œ ì•Œê³ ë¦¬ì¦˜ì€ ëª¨ë“  ì—ì§€ì— ëŒ€í•´ì„œ ìµœëŒ€ V-1ë²ˆ ê±°ë¦¬ë¥¼ ì—…ë°ì´íŠ¸í•˜ê¸° ë•Œë¬¸ì— ë§¤ ë°˜ë³µë§ˆë‹¤ ë” ì§§ì€ ê²½ë¡œë¥¼ ì°¾ì„ ìˆ˜ ìžˆë‹¤.
+//ë”°ë¼ì„œ ìŒìˆ˜ ê°€ì¤‘ì¹˜ê°€ ìžˆëŠ” ê·¸ëž˜í”„ì—ì„œ ì í•©í•˜ë©° ë‹¤ìµìŠ¤íŠ¸ë¼ì˜ ë‹¨ì ì„ ë³´ì™„í•  ìˆ˜ ìžˆë‹¤. ìŒìˆ˜ ê°€ì¤‘ì¹˜ê°€ ì—†ëŠ” ê·¸ëž˜í”„ì—ì„œëŠ”
+//ë‹¤ìµìŠ¤íŠ¸ë¼ ì•Œê³ ë¦¬ì¦˜ì„ ì‚¬ìš©í•˜ëŠ” ê²ƒì´ íš¨ìœ¨ì ì´ë‹¤. V-1ë²ˆì˜ ê²€í† ëŠ” ì–‘ìˆ˜ ê°€ì¤‘ì¹˜ ê·¸ëž˜í”„ì—ì„œëŠ” ë¶ˆí•„ìš”í•œ ë°˜ë³µì´ê¸° ë•Œë¬¸ì´ë‹¤.
 using namespace std;
 
-//¿¡Áö Å¬·¡½º´Â ½ÃÀÛ Á¤Á¡ÀÎ src¿Í µµÂø Á¤Á¡ÀÎ dst, ±×¸®°í °¡ÁßÄ¡·Î ±¸¼ºµÈ´Ù.
+//ì—ì§€ í´ëž˜ìŠ¤ëŠ” ì‹œìž‘ ì •ì ì¸ srcì™€ ë„ì°© ì •ì ì¸ dst, ê·¸ë¦¬ê³  ê°€ì¤‘ì¹˜ë¡œ êµ¬ì„±ëœë‹¤.
 class Edge
 {
 public:
@@ -13,45 +16,45 @@ public:
 	int weight;
 };
 
-//¹«ÇÑ´ë¸¦ Ç¥ÇöÇÏ±â À§ÇØ »ó¼ö UNKNOWNÀ» Á¤ÀÇÇÑ´Ù. UNKNOWNÀº Á¤¼ö »ó¼ö °ªÀ¸·Î, ±×·¡ÇÁ ¿¡Áö °¡ÁßÄ¡ÀÇ ÇÕº¸´Ù ÃæºÐÈ÷
-//Å« Á¤¼ö·Î ÁöÁ¤ÇÑ´Ù. ¿©±â¼­´Â Á¤¼ö ÃÖ´ë°ªÀÎ INT_MAX·Î Á¤ÀÇÇß°í, INT_MAX´Â climits> ÆÄÀÏ¿¡ Á¤ÀÇµÇ¾î ÀÖ´Ù.
+//ë¬´í•œëŒ€ë¥¼ í‘œí˜„í•˜ê¸° ìœ„í•´ ìƒìˆ˜ UNKNOWNì„ ì •ì˜í•œë‹¤. UNKNOWNì€ ì •ìˆ˜ ìƒìˆ˜ ê°’ìœ¼ë¡œ, ê·¸ëž˜í”„ ì—ì§€ ê°€ì¤‘ì¹˜ì˜ í•©ë³´ë‹¤ ì¶©ë¶„ížˆ
+//í° ì •ìˆ˜ë¡œ ì§€ì •í•œë‹¤. ì—¬ê¸°ì„œëŠ” ì •ìˆ˜ ìµœëŒ€ê°’ì¸ INT_MAXë¡œ ì •ì˜í–ˆê³ , INT_MAXëŠ” climits> íŒŒì¼ì— ì •ì˜ë˜ì–´ ìžˆë‹¤.
 
 const int UNKNOWN = INT_MAX;
 
-//ÀÌÁ¦ º§¸¸ Æ÷µå ¾Ë°í¸®ÁòÀ» ±¸ÇöÇÑ BellmanFord() ÇÔ¼ö¸¦ ±¸ÇöÇÑ´Ù. ÀÌ ÇÔ¼ö´Â ±×·¡ÇÁ¸¦ Ç¥ÇöÇÏ´Â ¿¡Áö ¸®½ºÆ®
-//edges, Á¤Á¡ °³¼ö V, Ãâ¹ß Á¤Á¡ ¹øÈ£ Start¸¦ ÀÎÀÚ·Î ¹Þ°í, °Å¸® °ª ¹è¿­À» ¹ÝÈ¯ÇÑ´Ù. ÀÌ ÇÔ¼ö ³»ºÎ¿¡¼­´Â V°³ Å©±âÀÇ
-//°Å¸® °ª ¹è¿­ distance¸¦ »ç¿ëÇÏ°í, ÀÌ ¹è¿­ÀÇ ÃÊ±ê°ªÀº UNKNOWNÀ¸·Î ÁöÁ¤ÇÑ´Ù. ´Ù¸¸ Ãâ¹ß Á¤Á¡¿¡ ´ëÇØ¼­´Â distance°ªÀº
-//0À¸·Î ¼³Á¤ÇÑ´Ù.
+//ì´ì œ ë²¨ë§Œ í¬ë“œ ì•Œê³ ë¦¬ì¦˜ì„ êµ¬í˜„í•œ BellmanFord() í•¨ìˆ˜ë¥¼ êµ¬í˜„í•œë‹¤. ì´ í•¨ìˆ˜ëŠ” ê·¸ëž˜í”„ë¥¼ í‘œí˜„í•˜ëŠ” ì—ì§€ ë¦¬ìŠ¤íŠ¸
+//edges, ì •ì  ê°œìˆ˜ V, ì¶œë°œ ì •ì  ë²ˆí˜¸ Startë¥¼ ì¸ìžë¡œ ë°›ê³ , ê±°ë¦¬ ê°’ ë°°ì—´ì„ ë°˜í™˜í•œë‹¤. ì´ í•¨ìˆ˜ ë‚´ë¶€ì—ì„œëŠ” Vê°œ í¬ê¸°ì˜
+//ê±°ë¦¬ ê°’ ë°°ì—´ distanceë¥¼ ì‚¬ìš©í•˜ê³ , ì´ ë°°ì—´ì˜ ì´ˆê¹ƒê°’ì€ UNKNOWNìœ¼ë¡œ ì§€ì •í•œë‹¤. ë‹¤ë§Œ ì¶œë°œ ì •ì ì— ëŒ€í•´ì„œëŠ” distanceê°’ì€
+//0ìœ¼ë¡œ ì„¤ì •í•œë‹¤.
 
 vector<int> BellmanFord(vector<Edge> edges, int V, int start)
 {
 	vector<int> distance(V, UNKNOWN);
 	distance[start] = 0;
 
-	//¾Ë°í¸®ÁòÀÇ ´ëºÎºÐÀº ´ÙÀ½ ´Ü°è¿¡¼­ ¼öÇàÇÑ´Ù. ÀÌ ´Ü°è¿¡¼­´Â (V-1)¹ø ¹Ýº¹µÇ´Â ·çÇÁ¸¦ Á¤ÀÇÇÏ°í, °¢ ·çÇÁ¿¡¼­´Â
-	//ÀüÃ¼ ¿¡Áö¸¦ °ËÅäÇÏ¸é¼­ °¢ Á¤Á¡ÀÇ °Å¸® °ªÀ» ¾÷µ¥ÀÌÆ®ÇÑ´Ù. ±¸Ã¼ÀûÀ¸·Î ¼³¸íÇÏ¸é °¢°¢ÀÇ ¿¡Áö Áß¿¡¼­ ½ÃÀÛ Á¤Á¡ÀÇ 
-	//°Å¸® °ªÀÌ UNKNOWNÀÌ ¾Æ´Ñ °æ¿ì¿¡ ´ëÇØ¼­¸¸ °Å¸® °ªÀ» ¾÷µ¥ÀÌÆ®ÇÏ¸ç, ÀÌ¶§(½ÃÀÛ Á¤Á¡ °Å¸® °ª+¿¡Áö °¡ÁßÄ¡) °è»ê °á°ú°¡
-	//¸ñÀûÁö Á¤Á¡ÀÇ °Å¸® °ªº¸´Ù ÀÛÀ¸¸é ¸ñÀûÁö Á¤Á¡ÀÇ °Å¸® °ªÀ» (½ÃÀÛ Á¤Á¡ °Å¸® °ª+ ¿¡Áö °¡ÁßÄ¡)·Î ±³Ã¼ÇÑ´Ù.
+	//ì•Œê³ ë¦¬ì¦˜ì˜ ëŒ€ë¶€ë¶„ì€ ë‹¤ìŒ ë‹¨ê³„ì—ì„œ ìˆ˜í–‰í•œë‹¤. ì´ ë‹¨ê³„ì—ì„œëŠ” (V-1)ë²ˆ ë°˜ë³µë˜ëŠ” ë£¨í”„ë¥¼ ì •ì˜í•˜ê³ , ê° ë£¨í”„ì—ì„œëŠ”
+	//ì „ì²´ ì—ì§€ë¥¼ ê²€í† í•˜ë©´ì„œ ê° ì •ì ì˜ ê±°ë¦¬ ê°’ì„ ì—…ë°ì´íŠ¸í•œë‹¤. êµ¬ì²´ì ìœ¼ë¡œ ì„¤ëª…í•˜ë©´ ê°ê°ì˜ ì—ì§€ ì¤‘ì—ì„œ ì‹œìž‘ ì •ì ì˜ 
+	//ê±°ë¦¬ ê°’ì´ UNKNOWNì´ ì•„ë‹Œ ê²½ìš°ì— ëŒ€í•´ì„œë§Œ ê±°ë¦¬ ê°’ì„ ì—…ë°ì´íŠ¸í•˜ë©°, ì´ë•Œ(ì‹œìž‘ ì •ì  ê±°ë¦¬ ê°’+ì—ì§€ ê°€ì¤‘ì¹˜) ê³„ì‚° ê²°ê³¼ê°€
+	//ëª©ì ì§€ ì •ì ì˜ ê±°ë¦¬ ê°’ë³´ë‹¤ ìž‘ìœ¼ë©´ ëª©ì ì§€ ì •ì ì˜ ê±°ë¦¬ ê°’ì„ (ì‹œìž‘ ì •ì  ê±°ë¦¬ ê°’+ ì—ì§€ ê°€ì¤‘ì¹˜)ë¡œ êµì²´í•œë‹¤.
 
-	//(V-1)¹ø ¹Ýº¹
+	//(V-1)ë²ˆ ë°˜ë³µ
 	for (int i = 0; i < V - 1; ++i)
 	{
-		//ÀüÃ¼ ¿¡Áö¿¡ ´ëÇØ ¹Ýº¹
+		//ì „ì²´ ì—ì§€ì— ëŒ€í•´ ë°˜ë³µ
 		for (auto& e : edges)
 		{
-			//¿¡ÁöÀÇ ½ÃÀÛ Á¤Á¡ÀÌ UNKNOWN°ªÀÌ¸é ½ºÅµ
-			//Áï ÇÑ ¹øÀÌ¶óµµ °Å¸®°¡ ¾÷µ¥ÀÌÆ® µÈ Á¤Á¡ÀÏ ¶§¿¡¸¸ ´Ù½Ã °Å¸® ¾÷µ¥ÀÌÆ®¸¦ ÁøÇàÇÑ´Ù.
-			//°Å¸®°¡ ¹«ÇÑÀÎ Á¤Á¡¿¡ ´ëÇØ¼­µµ °Å¸®¸¦ ¹Ù·Î ¾÷µ¥ÀÌÆ® ÇØ¹ö¸®¸é ÀÇµµÄ¡ ¾ÊÀº »óÈ²ÀÌ ¹ß»ýÇÑ´Ù.
-			//¿¹¸¦µé¾î 1->2->3->4<-5 ÀÇ ±×·¡ÇÁ°¡ ÀÖ´Ù°í ÇÏÀÚ. 3->4±îÁö´Â Á¤»óÀûÀ¸·Î ¾÷µ¥ÀÌÆ®°¡ ÀÌ·ç¾îÁø´Ù.
-			//¸¸¾à 5(¹«ÇÑ´ë)->4ÀÇ °Å¸®°¡ ¾÷µ¥ÀÌÆ® µÇ¾î ¹ö¸®¸é 1->5->4°¡ °¡´ÉÇÏ´Ù´Â »óÈ²ÀÌ µÈ´Ù. ÇÏÁö¸¸
-			//1¿¡¼­ ¹Ù·Î 5·Î °¥ ¼ö´Â ¾ø´Ù. Áï °Å¸®°¡ ÇÑ ¹øÀÌ¶óµµ ¾÷µ¥ÀÌÆ® µÈ »óÅÂ¶ó´Â °ÍÀº ÇØ´ç Á¤Á¡±îÁö
-			//°æ·Î°¡ ÀÌ¾îÁ® ÀÖ°í, °Å¸®°¡ °è»êµÈ »óÅÂ¶ó´Â °ÍÀÌ´Ù.
+			//ì—ì§€ì˜ ì‹œìž‘ ì •ì ì´ UNKNOWNê°’ì´ë©´ ìŠ¤í‚µ
+			//ì¦‰ í•œ ë²ˆì´ë¼ë„ ê±°ë¦¬ê°€ ì—…ë°ì´íŠ¸ ëœ ì •ì ì¼ ë•Œì—ë§Œ ë‹¤ì‹œ ê±°ë¦¬ ì—…ë°ì´íŠ¸ë¥¼ ì§„í–‰í•œë‹¤.
+			//ê±°ë¦¬ê°€ ë¬´í•œì¸ ì •ì ì— ëŒ€í•´ì„œë„ ê±°ë¦¬ë¥¼ ë°”ë¡œ ì—…ë°ì´íŠ¸ í•´ë²„ë¦¬ë©´ ì˜ë„ì¹˜ ì•Šì€ ìƒí™©ì´ ë°œìƒí•œë‹¤.
+			//ì˜ˆë¥¼ë“¤ì–´ 1->2->3->4<-5 ì˜ ê·¸ëž˜í”„ê°€ ìžˆë‹¤ê³  í•˜ìž. 3->4ê¹Œì§€ëŠ” ì •ìƒì ìœ¼ë¡œ ì—…ë°ì´íŠ¸ê°€ ì´ë£¨ì–´ì§„ë‹¤.
+			//ë§Œì•½ 5(ë¬´í•œëŒ€)->4ì˜ ê±°ë¦¬ê°€ ì—…ë°ì´íŠ¸ ë˜ì–´ ë²„ë¦¬ë©´ 1->5->4ê°€ ê°€ëŠ¥í•˜ë‹¤ëŠ” ìƒí™©ì´ ëœë‹¤. í•˜ì§€ë§Œ
+			//1ì—ì„œ ë°”ë¡œ 5ë¡œ ê°ˆ ìˆ˜ëŠ” ì—†ë‹¤. ì¦‰ ê±°ë¦¬ê°€ í•œ ë²ˆì´ë¼ë„ ì—…ë°ì´íŠ¸ ëœ ìƒíƒœë¼ëŠ” ê²ƒì€ í•´ë‹¹ ì •ì ê¹Œì§€
+			//ê²½ë¡œê°€ ì´ì–´ì ¸ ìžˆê³ , ê±°ë¦¬ê°€ ê³„ì‚°ëœ ìƒíƒœë¼ëŠ” ê²ƒì´ë‹¤.
 			if (distance[e.src]==UNKNOWN)
 			{
 				continue;
 			}
-			//¿¡ÁöÀÇ ½ÃÀÛ Á¤Á¡ÀÇ °Å¸® °ªÀÌ »õ·Î¿î °æ·Î¿¡ ÀÇÇÑ °Å¸® °ªº¸´Ù Å©¸é
-			//°Å¸® °ªÀ» ¾÷µ¥ÀÌÆ®ÇÔ
+			//ì—ì§€ì˜ ì‹œìž‘ ì •ì ì˜ ê±°ë¦¬ ê°’ì´ ìƒˆë¡œìš´ ê²½ë¡œì— ì˜í•œ ê±°ë¦¬ ê°’ë³´ë‹¤ í¬ë©´
+			//ê±°ë¦¬ ê°’ì„ ì—…ë°ì´íŠ¸í•¨
 			if (distance[e.dst] > distance[e.src] + e.weight)
 			{
 				distance[e.dst] = distance[e.src] + e.weight;
@@ -63,10 +66,10 @@ vector<int> BellmanFord(vector<Edge> edges, int V, int start)
 
 int main()
 {
-	int V = 5;              // Á¤Á¡ °³¼ö
-	vector<Edge> edges;     // ¿¡Áö Æ÷ÀÎÅÍÀÇ º¤ÅÍ
+	int V = 5;              // ì •ì  ê°œìˆ˜
+	vector<Edge> edges;     // ì—ì§€ í¬ì¸í„°ì˜ ë²¡í„°
 
-	vector<vector<int>> edge_map{ // {½ÃÀÛ Á¤Á¡, ¸ñÇ¥ Á¤Á¡, °¡ÁßÄ¡}
+	vector<vector<int>> edge_map{ // {ì‹œìž‘ ì •ì , ëª©í‘œ ì •ì , ê°€ì¤‘ì¹˜}
 		{0, 1, 3},
 		{1, 2, 5},
 		{1, 3, 10},
@@ -82,13 +85,13 @@ int main()
 	int start = 0;
 	vector<int> distance = BellmanFord(edges, V, start);
 
-	cout << "[" << start << "¹ø Á¤Á¡À¸·ÎºÎÅÍ ÃÖ¼Ò °Å¸®]" << endl;
+	cout << "[" << start << "ë²ˆ ì •ì ìœ¼ë¡œë¶€í„° ìµœì†Œ ê±°ë¦¬]" << endl;
 
 	for (int i = 0; i < distance.size(); i++)
 	{
 		if (distance[i] == UNKNOWN)
-			cout << i << "¹ø Á¤Á¡: ¹æ¹®ÇÏÁö ¾ÊÀ½!" << endl;
+			cout << i << "ë²ˆ ì •ì : ë°©ë¬¸í•˜ì§€ ì•ŠìŒ!" << endl;
 		else
-			cout << i << "¹ø Á¤Á¡: " << distance[i] << endl;
+			cout << i << "ë²ˆ ì •ì : " << distance[i] << endl;
 	}
 }
