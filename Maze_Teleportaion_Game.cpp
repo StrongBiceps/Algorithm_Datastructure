@@ -104,6 +104,10 @@ void CollectConnectedComponents(int node, vector<bool>& visited,
 			cout << "has child" << endl;
 			CollectConnectedComponents(next, visited, adj, component);
 		}
+		//vector<Edge> edges = { {0,1,0},{1,2,0},{2,3,0},{3,0,0} } 이런 형태의 모든 정점이 연결되어 있는 그래프일 때는
+		//해당 for문에서 무한 루프에 빠진다고 착각할 수 있는데, 코드를 잘 보면 0->3->2->1 순으로 방문하다가 1에서 다시 0으로 방문할 것이다.
+		//0은 이미 visited가 true인 상황이므로 CollectConnectedComponents를 다시 호출하지 않는다. 따라서 else if문으로 가게 되고 else if의
+		//조건도 맞지 않으므로 1의 for문이 끝난다. 재귀를 따라 올라가며 for문을 종료하므로 무한 루프에 빠지지 않는다.
 		else if (inComponent[node] != inComponent[next])
 		{
 			//isStuck이 false로 설정되는 과정을 보기 위한 디버깅 출력문
@@ -252,8 +256,13 @@ int main()
 	/*int V=6;
 	vector<Edge> edges = { {0,1,0},{1,2,0},{2,3,0},{2,4,0},{1,5,0} };*/
 
-	int V=9;
-	vector<Edge> edges = { {0,1,0},{0,3,0},{1,4,0},{1,2,0},{2,3,0},{2,5,0},{3,7,0},{4,2,0},{5,4,0},{5,6,0},{6,7,0},{6,2,0},{7,8,0},{8,3,0} };
+	//모든 정점이 연결된 하나의 강한 연결 요소로 이루어진 유향 그래프일 경우
+	int V = 4;
+	vector<Edge> edges = { {0,1,0},{1,2,0},{2,3,0},{3,0,0} };
+
+	//코사라주 코드의 그래프
+	/*int V=9;
+	vector<Edge> edges = { {0,1,0},{0,3,0},{1,4,0},{1,2,0},{2,3,0},{2,5,0},{3,7,0},{4,2,0},{5,4,0},{5,6,0},{6,7,0},{6,2,0},{7,8,0},{8,3,0} };*/
 
 	//ReadTestCase("testcase4_maze.txt", V, edges);
 
