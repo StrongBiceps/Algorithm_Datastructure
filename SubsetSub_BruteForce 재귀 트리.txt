@@ -1,0 +1,103 @@
+Set size = 4
+
+-false는 원소 추가하지 않고 재귀 호출
+-true는 원소 추가한 뒤 재귀 호출
+-if push는 if문 안에서의 push
+
+GetAllSubsets(0) - Start
+	GetAllSubsets(1) - false
+		GetAllSubsets(2) - false
+			GetAllSubsets(3) - false
+				GetAllSubsets(4) - false
+					if-push allSubset[0]={}
+				push subset[0]=Set[3]
+				GetAllSubsets(4) - true
+					if-push allSubset[1]={{Set[3]]}
+			push subset[0] = Set[2]
+			GetAllSubsets(3) -true
+				GetAllSubsets(4) - false
+					if push allSubset[1] ={{Set[2]},{Set[3]}}
+				push subset[1]=Set[3]
+				GetAllSubsets(4) - true
+					if-push allSubset[2] = {{Set[2],Set[3]}}
+		push subset[0] = Set[1]
+		GetAllSubsets(2) - true
+			GetAllSubsets(3) - false
+				GetAllSubsets(4) - false
+					if-push allSubset[1] = {{Set[3]},{Set[1]},{Set[2]}}
+				push subset[1] = Set[3]
+				GetAllSubsets(4) - true
+					if-push allSubset[2] = {{Set[2],Set[3]},{Set[1],Set[3]}}
+			push subset[1] = Set[2]
+			GetAllSubsets(3) - true
+				GetAllSubsets(4) - false
+					if - push allSubset[2] = {{Set[2],Set[3]},{Set[1],Set[3]},{Set[1],Set[2]}}
+				push subset[2] = Set[3]
+				GetAllSubsets(4) - true
+					if - push allSubset[3] = {{Set[1],Set[2],Set[3]}}
+	push subset[0] = Set[0]
+	GetAllSubsets(1) - true
+		GetAllSubsets(2) - false
+			GetAllSubsets(3) - false
+				GetAullSubsets(4) - false
+					if-push allSubset[1]={{Set[3]},{Set[1]},{Set[2]},{Set[0]}}
+				push subset[1] = Set[3]
+				GetAllSubsets(4) - true
+					if-push allSubset[2] = {{Set[2],Set[3]},{Set[1],Set[3]},{Set[1],Set[2]},{Set[0],Set[3]}}
+			push subset[1] = Set[2]
+			GetAllSubsets(3) - true
+				GetAllSubsets(4) - false
+					if-push allSubset[2] = {{Set[2],Set[3]},{Set[1],Set[3]},{Set[1],Set[2]},{Set[0],Set[3]},{Set[0],Set[2]}}
+				push subset[2] = Set[3]
+				GetAllSubsets(4) - true
+					if-push allSubset[3] = {{Set[1],Set[2],Set[3]},{Set[0],Set[2],Set[3]}}
+		push subset[1] = Set[1]
+		GetAllSubsets(2) - true
+			GetAllSubsets(3) -false
+				GetAllSubsets(4) - false
+					if-push allSubsets[2] = {{Set[2],Set[3]},{Set[1],Set[3]},{Set[1],Set[2]},{Set[0],Set[3]},{Set[0],Set[1]}}
+				push subsets[2] = Set[3]
+				GetAllSubsets(4) - true
+					if-push allSubsets[3] ={{Set[1],Set[2],Set[3]},{Set[0],Set[2],Set[3]},{Set[0],Set[1],Set[3]}}
+			push subset[2] = Set[2]
+			GetAllSubsets(3) - true
+				GetAllSubsets(4) - false
+					if-push allSubsets[3] = {{Set[1],Set[2],Set[3]},{Set[0],Set[2],Set[3]},{Set[0],Set[1],Set[3]},{Set[0],Set[1],Set[2]}}
+				push subsets[3] = Set[3]
+				GetAllSubsets(4) - true
+					if-push allSubsets[4] = {{Set[0],Set[1],Set[2],Set[3]}}
+		
+
+분석:
+GetAllSubsets(1) - false 를 상위트리로 취급할 것이다.
+GetAllSubsets(1) - true가 하위트리로 취급할 것이다.
+
+
+vector<int> Subset은 값에 의한 호출이므로 다른 상위 재귀로 회귀하면 하위 재귀에서 업데이트되었던 subset은 사라진다는 사실을 인지하라.
+하지만 allSubset은 참조이므로 모든 변경사항이 저장된다.
+
+GetAllSubsets(4)가 처음 호출될 때 allSubsets[0]={} 상태가 된다.
+가장 상위 트리에서는 subset이 비어있는 경우이다.
+또 GetAllSubsets(4)에서만 allSubset에 push된다. 
+
+상위 트리의 GetAllSubsets(2) - false까지의 과정에서 Set[3],Set[2]가 allSubset[0],[1],[2]에 조합되어서 저장된다.
+상위 트리의 GetAllSubsets(2) - true까지의 과정에서 Set[1],Set[2],Set[3]이 allSubset[1],[2],[3]에 조합되어서 저장된다.
+상위 트리의 GetAllSubsets(1) - false까지의 과정에서 Set[1],Set[2],Set[3]이 조합되어 저장된다.
+
+하위 트리의 GetAllSubsets(2) - false까지의 과정에서 Set[0],Set[3],Set[2]가 allSubset[1],[2],[3]에 조합되어서 저장된다.
+하위 트리의 GetAllSubsets(2) - true까지의 과정에서 Set[0],Set[1],Set[2],Set[3]이 allSubset[2],[3],[4]에 조합되어서 저장된다.
+하위 트리의 GetAllsubsets(1) - true까지의 과정에서 Set[0],Set[1],Set[2],Set[3]이 조합되어서 저장된다.
+
+GetAllSubSets(4) 이전에 subset에 원소가 몇 개인지에 따라 push allSubsets의 인덱스가 결정된다. 가장 상위트리에서는 아무것도 없으므로 가장 처음에 [0]에 들어간다.
+또 GetAllSubsets(3)~(4)에서는 Set[2],Set[3]이 조합된다. 즉 아무것도 없었을 때는 인덱스가 [0],[1],[2]이 될 것이고 Set[2],Set[3]이 조합된다.
+그리고 하나가 추가되었을 때는 Set[1],Set[2],Set[3]이 조합되어서 인덱스 [1],[2],[3]에 저장될 것이다.
+
+2 3 조합 allSubset인덱스 0 1 2
+1 2 3 조합 allSubset 인덱스 1 2 3
+0 2 3 조합 allSubset 인덱스 1 2 3
+0 1 2 3 조합 이 순서로 조합된다. allSubset 인덱스 2 3 4
+
+왜 allSubset에 중복된 경우가 들어가지 않는가 생각해보면, 위 순서로 조합이 이루어지는데, 모두 다른 조합이고, 2 3은 계속해서 등장하지만,
+1 2 3부터는 allSubset의 인덱스가 무조건 1이상이므로(0이 맨 앞에서 들어갔기 때문에) 인덱스 1에 중복되어서 들어갈 수는 없다.
+
+위에서 적은 조합은 자세한 조합이 아니다. 조합을 자세히 보려면 재귀 트리를 따라가보면 알 수 있다. 또 각 재귀마다 다른 조합이 발생할 수 밖에 없다.
