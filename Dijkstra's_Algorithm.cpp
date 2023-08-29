@@ -7,6 +7,9 @@
 #include <algorithm>
 #include <string>
 
+//ë‹¤ìµìŠ¤íŠ¸ë¼ ì•Œê³ ë¦¬ì¦˜ì˜ íŠ¹ì§•ì€ í•œ ë²ˆ ê³„ì‚°ëœ ê±°ë¦¬ëŠ” ë‹¤ì‹œ ì—…ë°ì´íŠ¸í•˜ì§€ ì•ŠëŠ”ë‹¤ëŠ” ê²ƒì´ë‹¤.
+//ë”°ë¼ì„œ ìŒìˆ˜ ê°€ì¤‘ì¹˜ê°€ ìˆëŠ” ê·¸ë˜í”„ì—ì„œëŠ” ì¸ì ‘ ì •ì  ì¤‘ì—ì„œ ê°€ì¤‘ì¹˜ëŠ” ê°€ì¥ ì‘ì§€ ì•Šë”ë¼ë„ ëª©í‘œ ì •ì ìœ¼ë¡œ ê°€ëŠ” ê²½ë¡œê°€ ìµœë‹¨ ê±°ë¦¬ì¼ ê²½ìš°ê°€ ìˆë‹¤.
+//ìŒìˆ˜ ê°€ì¤‘ì¹˜ê°€ ìˆëŠ” ê²½ìš°ì—ëŠ” ì¡´ìŠ¨ ì•Œê³ ë¦¬ì¦˜ì„ ì‚¬ìš©í•´ì•¼ í•œë‹¤.
 using namespace std;
 
 template <typename T>
@@ -21,16 +24,16 @@ template <typename T>
 class Graph
 {
 public:
-	// N°³ÀÇ Á¤Á¡À¸·Î ±¸¼ºµÈ ±×·¡ÇÁ
+	// Nê°œì˜ ì •ì ìœ¼ë¡œ êµ¬ì„±ëœ ê·¸ë˜í”„
 	Graph(unsigned N) : V(N) {}
 
-	// ±×·¡ÇÁÀÇ Á¤Á¡ °³¼ö ¹İÈ¯
+	// ê·¸ë˜í”„ì˜ ì •ì  ê°œìˆ˜ ë°˜í™˜
 	auto vertices() const { return V; }
 
-	// ÀüÃ¼ ¿¡Áö ¸®½ºÆ® ¹İÈ¯
+	// ì „ì²´ ì—ì§€ ë¦¬ìŠ¤íŠ¸ ë°˜í™˜
 	auto& edges() const { return edge_list; }
 
-	// Á¤Á¡ v¿¡¼­ ³ª°¡´Â ¸ğµç ¿¡Áö¸¦ ¹İÈ¯
+	// ì •ì  vì—ì„œ ë‚˜ê°€ëŠ” ëª¨ë“  ì—ì§€ë¥¼ ë°˜í™˜
 	auto edges(unsigned v) const
 	{
 		vector<Edge<T>> edges_from_v;
@@ -45,19 +48,19 @@ public:
 
 	void add_edge(Edge<T>&& e)
 	{
-		// ¿¡Áö ¾ç ³¡ Á¤Á¡ ID°¡ À¯È¿ÇÑÁö °Ë»ç
+		// ì—ì§€ ì–‘ ë ì •ì  IDê°€ ìœ íš¨í•œì§€ ê²€ì‚¬
 		if (e.src >= 1 && e.src <= V && e.dst >= 1 && e.dst <= V)
 			edge_list.emplace_back(e);
 		else
-			cerr << "¿¡·¯: À¯È¿ ¹üÀ§¸¦ ¹ş¾î³­ Á¤Á¡!" << endl;
+			cerr << "ì—ëŸ¬: ìœ íš¨ ë²”ìœ„ë¥¼ ë²—ì–´ë‚œ ì •ì !" << endl;
 	}
 
-	// Ç¥ÁØ Ãâ·Â ½ºÆ®¸² Áö¿ø
+	// í‘œì¤€ ì¶œë ¥ ìŠ¤íŠ¸ë¦¼ ì§€ì›
 	template <typename U>
 	friend ostream& operator<< (ostream& os, const Graph<U>& G);
 
 private:
-	unsigned V;		// Á¤Á¡ °³¼ö
+	unsigned V;		// ì •ì  ê°œìˆ˜
 	vector<Edge<T>> edge_list;
 };
 
@@ -106,7 +109,7 @@ struct Label
 	unsigned ID;
 	T distance;
 
-	// Label °´Ã¼ ºñ±³´Â °Å¸®(distance) °ªÀ» ÀÌ¿ë
+	// Label ê°ì²´ ë¹„êµëŠ” ê±°ë¦¬(distance) ê°’ì„ ì´ìš©
 	inline bool operator> (const Label<T>& l) const
 	{
 		return this->distance > l.distance;
@@ -116,68 +119,68 @@ struct Label
 template <typename T>
 auto dijkstra_shortest_path(const Graph<T>& G, unsigned src, unsigned dst)
 {
-	// ÃÖ¼Ò Èü
-	//°Å¸® °ªÀ» È°¿ëÇÑ´Ù.
+	// ìµœì†Œ í™
+	//ê±°ë¦¬ ê°’ì„ í™œìš©í•œë‹¤.
 	priority_queue<Label<T>, vector<Label<T>>, greater<Label<T>>> heap;
 
-	// ¸ğµç Á¤Á¡¿¡¼­ °Å¸® °ªÀ» ÃÖ´ë·Î ¼³Á¤
+	// ëª¨ë“  ì •ì ì—ì„œ ê±°ë¦¬ ê°’ì„ ìµœëŒ€ë¡œ ì„¤ì •
 	vector<T> distance(G.vertices(), numeric_limits<T>::max());
 
-	set<unsigned> visited;					// ¹æ¹®ÇÑ Á¤Á¡
-	vector<unsigned> parent(G.vertices());	// ÀÌµ¿ °æ·Î¸¦ ±â¾ïÀ» À§ÇÑ º¤ÅÍ
+	set<unsigned> visited;					// ë°©ë¬¸í•œ ì •ì 
+	vector<unsigned> parent(G.vertices());	// ì´ë™ ê²½ë¡œë¥¼ ê¸°ì–µì„ ìœ„í•œ ë²¡í„°
 
-	//½ÃÀÛ Á¤Á¡Àº °Å¸®°¡ 0ÀÌ´Ù.
+	//ì‹œì‘ ì •ì ì€ ê±°ë¦¬ê°€ 0ì´ë‹¤.
 	heap.emplace(Label<T>{src, 0});
 
-	//½ÃÀÛ Á¤Á¡À» ¹æ¹® °æ·Î¿¡ Ãß°¡ÇÑ´Ù.
+	//ì‹œì‘ ì •ì ì„ ë°©ë¬¸ ê²½ë¡œì— ì¶”ê°€í•œë‹¤.
 	parent[src] = src;
 
-	//ÈüÀÌ ºñ¾îÀÖÀ» ¶§±îÁö ¹İº¹ÇÑ´Ù.
-	//µµÁß¿¡ ¸ñÀû Á¤Á¡À» ¸¸³ª¸é Á¾·áÇÑ´Ù.
+	//í™ì´ ë¹„ì–´ìˆì„ ë•Œê¹Œì§€ ë°˜ë³µí•œë‹¤.
+	//ë„ì¤‘ì— ëª©ì  ì •ì ì„ ë§Œë‚˜ë©´ ì¢…ë£Œí•œë‹¤.
 	while (!heap.empty())
 	{
-		//Ã³À½ ¹İº¹¿¡¼­ÀÇ topÀº ½ÃÀÛ Á¤Á¡ÀÌ´Ù.
+		//ì²˜ìŒ ë°˜ë³µì—ì„œì˜ topì€ ì‹œì‘ ì •ì ì´ë‹¤.
 		auto current_vertex = heap.top();
 
 		heap.pop();
 
-		// ¸ñÀûÁö Á¤Á¡¿¡ µµÂøÇß´Ù¸é Á¾·á
+		// ëª©ì ì§€ ì •ì ì— ë„ì°©í–ˆë‹¤ë©´ ì¢…ë£Œ
 		if (current_vertex.ID == dst)
 		{
-			cout << current_vertex.ID << "¹ø Á¤Á¡(¸ñÀû Á¤Á¡)¿¡ µµÂø!" << endl;
+			cout << current_vertex.ID << "ë²ˆ ì •ì (ëª©ì  ì •ì )ì— ë„ì°©!" << endl;
 			break;
 		}
 
-		// ÇöÀç Á¤Á¡À» ÀÌÀü¿¡ ¹æ¹®ÇÏÁö ¾Ê¾Ò´Ù¸é
+		// í˜„ì¬ ì •ì ì„ ì´ì „ì— ë°©ë¬¸í•˜ì§€ ì•Šì•˜ë‹¤ë©´
 		if (visited.find(current_vertex.ID) == visited.end())
 		{
-			cout << current_vertex.ID << "¹ø Á¤Á¡¿¡ ¾ÈÂø!" << endl;
+			cout << current_vertex.ID << "ë²ˆ ì •ì ì— ì•ˆì°©!" << endl;
 
-			// ÇöÀç Á¤Á¡°ú ¿¬°áµÈ ¸ğµç ¿¡Áö¿¡ ´ëÇØ
+			// í˜„ì¬ ì •ì ê³¼ ì—°ê²°ëœ ëª¨ë“  ì—ì§€ì— ëŒ€í•´
 			for (auto& e : G.edges(current_vertex.ID))
 			{
 				auto neighbor = e.dst;
 				auto new_distance = current_vertex.distance + e.weight;
 
-				// ÀÎÁ¢ÇÑ Á¤Á¡ÀÇ °Å¸® °ªÀÌ »õ·Î¿î °æ·Î¿¡ ÀÇÇÑ °Å¸® °ªº¸´Ù Å©¸é
-				// Èü¿¡ Ãß°¡ÇÏ°í, °Å¸® °ªÀ» ¾÷µ¥ÀÌÆ®ÇÔ.
+				// ì¸ì ‘í•œ ì •ì ì˜ ê±°ë¦¬ ê°’ì´ ìƒˆë¡œìš´ ê²½ë¡œì— ì˜í•œ ê±°ë¦¬ ê°’ë³´ë‹¤ í¬ë©´
+				// í™ì— ì¶”ê°€í•˜ê³ , ê±°ë¦¬ ê°’ì„ ì—…ë°ì´íŠ¸í•¨.
 				if (new_distance < distance[neighbor])
 				{
 					heap.emplace(Label<T>{neighbor, new_distance});
 
-					//parent[neighbor] = current_vertex.ID ¿¡¼­ neighbor´Â
-					//current_vertex¿Í ¿¬°áµÈ Á¤Á¡ÀÌ´Ù.
+					//parent[neighbor] = current_vertex.ID ì—ì„œ neighborëŠ”
+					//current_vertexì™€ ì—°ê²°ëœ ì •ì ì´ë‹¤.
 					parent[neighbor] = current_vertex.ID;
 					distance[neighbor] = new_distance;
 				}
 			}
 
-			//¹æ¹® Á¤Á¡¿¡ Ãß°¡ÇÑ´Ù.
+			//ë°©ë¬¸ ì •ì ì— ì¶”ê°€í•œë‹¤.
 			visited.insert(current_vertex.ID);
 		}
 	}
 
-	// ¹éÆ®·¡Å· ¹æ½ÄÀ¸·Î ½ÃÀÛ Á¤Á¡ºÎÅÍ ¸ñÀû Á¤Á¡±îÁöÀÇ °æ·Î ±¸¼º
+	// ë°±íŠ¸ë˜í‚¹ ë°©ì‹ìœ¼ë¡œ ì‹œì‘ ì •ì ë¶€í„° ëª©ì  ì •ì ê¹Œì§€ì˜ ê²½ë¡œ êµ¬ì„±
 	
 	vector<unsigned> shortest_path;
 	auto current_vertex = dst;
@@ -189,7 +192,7 @@ auto dijkstra_shortest_path(const Graph<T>& G, unsigned src, unsigned dst)
 	}
 
 	shortest_path.push_back(src);
-	//¸ñÀûÁöºÎÅÍ ½ÃÀÛÇÏ¿© ½ÃÀÛ Á¤Á¡±îÁö °Å²Ù·Î µé¾î°¬±â ¶§¹®¿¡ reverse·Î ¼ø¼­¸¦ ¹Ù²ãÁØ´Ù.
+	//ëª©ì ì§€ë¶€í„° ì‹œì‘í•˜ì—¬ ì‹œì‘ ì •ì ê¹Œì§€ ê±°ê¾¸ë¡œ ë“¤ì–´ê°”ê¸° ë•Œë¬¸ì— reverseë¡œ ìˆœì„œë¥¼ ë°”ê¿”ì¤€ë‹¤.
 	reverse(shortest_path.begin(), shortest_path.end());
 
 	return shortest_path;
@@ -199,14 +202,14 @@ int main()
 {
 	using T = unsigned;
 
-	// ±×·¡ÇÁ °´Ã¼ »ı¼º
+	// ê·¸ë˜í”„ ê°ì²´ ìƒì„±
 	auto G = create_reference_graph<T>();
-	cout << "[ÀÔ·Â ±×·¡ÇÁ]" << endl;
+	cout << "[ì…ë ¥ ê·¸ë˜í”„]" << endl;
 	cout << G << endl;
 
 	auto shortest_path = dijkstra_shortest_path<T>(G, 1, 6);
 
-	cout << endl << "[1¹ø°ú 6¹ø Á¤Á¡ »çÀÌÀÇ ÃÖ´Ü °æ·Î]" << endl;
+	cout << endl << "[1ë²ˆê³¼ 6ë²ˆ ì •ì  ì‚¬ì´ì˜ ìµœë‹¨ ê²½ë¡œ]" << endl;
 	for (auto v : shortest_path)
 		cout << v << " ";
 	cout << endl;
