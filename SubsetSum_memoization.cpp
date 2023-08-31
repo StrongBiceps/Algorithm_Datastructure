@@ -5,11 +5,45 @@
 #include <iomanip>
 #include <iostream>
 
-//ºÎºĞÁıÇÕÀÇ ÇÕÀ» ±¸ÇÏ´Â ´Ü°è¿¡¼­ 1106¹øÂ° Àç±Í¿¡¼­ Ã³À½ Áßº¹µÈ ºÎºĞ¹®Á¦°¡ ¹ß»ıÇÏ¿©
-//Ä³½Ã¸¦ ÅëÇØ¼­ Àç±Í°¡ ÁÙ¾îµç´Ù. ÀÏ¹İÀûÀÎ ÁıÇÕ(ÀÛÀº Å©±âÀÇ ÁıÇÕ)¿¡¼­´Â Áßº¹ÀÌ ¹ß»ıÇÏÁö
-//¾Ê°í ¾î´ÀÁ¤µµ Å©±â°¡ ÀÖ´Â ÁıÇÕ¿¡¼­ ÃÑ ÇÕº¸´Ù ¹Ì¼¼ÇÏ°Ô ÀÛÀº ÇÕÀ» °Ë»öÇÏ´Â °æ¿ì¿¡ È¿°ú°¡ ÀÖÀ»
-//°ÍÀ¸·Î º¸ÀÎ´Ù. ¸¸¾à ¹Ì¼¼ÇÏ°Ô ÀÛÀº °ªÀÌ ¾Æ´Ï¶ó 6070À» ÀÔ·ÂÀ¸·Î ³Ö¾úÀ» °æ¿ì¿¡´Â ¹éÆ®·¡Å·°ú
-//¸Ş¸ğÀÌÁ¦ÀÌ¼ÇÀÇ Â÷ÀÌ°¡ 2¹è Â÷ÀÌ¹Û¿¡ ³ªÁö ¾Ê´Â´Ù.
+//ë¶€ë¶„ì§‘í•©ì˜ í•©ì„ êµ¬í•˜ëŠ” ë‹¨ê³„ì—ì„œ 1106ë²ˆì§¸ ì¬ê·€ì—ì„œ ì²˜ìŒ ì¤‘ë³µëœ ë¶€ë¶„ë¬¸ì œê°€ ë°œìƒí•˜ì—¬
+//ìºì‹œë¥¼ í†µí•´ì„œ ì¬ê·€ê°€ ì¤„ì–´ë“ ë‹¤. ì¼ë°˜ì ì¸ ì§‘í•©(ì‘ì€ í¬ê¸°ì˜ ì§‘í•©)ì—ì„œëŠ” ì¤‘ë³µì´ ë°œìƒí•˜ì§€
+//ì•Šê³  ì–´ëŠì •ë„ í¬ê¸°ê°€ ìˆëŠ” ì§‘í•©ì—ì„œ ì´ í•©ë³´ë‹¤ ë¯¸ì„¸í•˜ê²Œ ì‘ì€ í•©ì„ ê²€ìƒ‰í•˜ëŠ” ê²½ìš°ì— íš¨ê³¼ê°€ ìˆì„
+//ê²ƒìœ¼ë¡œ ë³´ì¸ë‹¤. ë§Œì•½ ë¯¸ì„¸í•˜ê²Œ ì‘ì€ ê°’ì´ ì•„ë‹ˆë¼ 6070ì„ ì…ë ¥ìœ¼ë¡œ ë„£ì—ˆì„ ê²½ìš°ì—ëŠ” ë°±íŠ¸ë˜í‚¹ê³¼
+//ë©”ëª¨ì´ì œì´ì…˜ì˜ ì°¨ì´ê°€ 2ë°° ì°¨ì´ë°–ì— ë‚˜ì§€ ì•ŠëŠ”ë‹¤.
+
+//ì•„ë˜ëŠ” í”¼ë³´ë‚˜ì¹˜ ê³„ì‚°ì—ì„œì˜ ë©”ëª¨ì´ì œì´ì…˜ í™œìš©ì´ë‹¤.
+/*Rì€ ì¬ê·€ê°€ ì¤„ì—ˆë‹¤ëŠ” ëœ» Reduce
+
+fib(5)
+	memo[5]=fib(4)+fib(3)
+		fib(4)
+			memo[4]=fib(3)+fib(2)
+				fib(3)
+					memo[3]=fib(2)+fib(1)
+						fib(2)
+							memo[2]=fib(1)+fib(0)
+						fib(1)
+				fib(2)
+				return memo[2] - R
+		fib(3)
+		return memo[3] - R
+fib(3)ê³¼ fib(2)ì˜ ì¤‘ë³µ ë¬¸ì œì—ì„œ ì¬ê·€ë¥¼ ì¤„ì˜€ë‹¤.
+
+std::unordered_map<int, int> memo;
+
+int fibonacci_memoization(int n) {
+    if (memo.find(n) != memo.end()) {
+        return memo[n];
+    }
+
+    if (n <= 1) {
+        return n;
+    }
+
+    memo[n] = fibonacci_memoization(n - 1) + fibonacci_memoization(n - 2);
+    return memo[n];
+}
+*/
 #define DEBUG 0
 
 #if DEBUG
@@ -27,18 +61,18 @@ const int UNKNOWN = -1;
 void GetAllSubsets(vector<int> set, vector<int> subset,
 	int index, vector<vector<vector<int>>>& allSubsets)
 {
-	// ÁıÇÕ setÀÇ ³¡¿¡ µµ´ŞÇÑ °æ¿ì
+	// ì§‘í•© setì˜ ëì— ë„ë‹¬í•œ ê²½ìš°
 	if (index == set.size())
 	{
-		// ºÎºĞÁıÇÕ Å©±â¸¦ ÀÎµ¦½º·Î »ç¿ëÇÏ¿© ºÎºĞÁıÇÕÀ» allSubsets¿¡ Ãß°¡
+		// ë¶€ë¶„ì§‘í•© í¬ê¸°ë¥¼ ì¸ë±ìŠ¤ë¡œ ì‚¬ìš©í•˜ì—¬ ë¶€ë¶„ì§‘í•©ì„ allSubsetsì— ì¶”ê°€
 		allSubsets[subset.size()].push_back(subset);
 		return;
 	}
 
-	// ¿ø¼Ò¸¦ Ãß°¡ÇÏÁö ¾Ê°í Àç±Í È£Ãâ
+	// ì›ì†Œë¥¼ ì¶”ê°€í•˜ì§€ ì•Šê³  ì¬ê·€ í˜¸ì¶œ
 	GetAllSubsets(set, subset, index + 1, allSubsets);
 
-	// ¿ø¼Ò¸¦ ºÎºĞÁıÇÕ¿¡ Ãß°¡ÇÑ ÈÄ Àç±Í È£Ãâ
+	// ì›ì†Œë¥¼ ë¶€ë¶„ì§‘í•©ì— ì¶”ê°€í•œ í›„ ì¬ê·€ í˜¸ì¶œ
 	subset.push_back(set[index]);
 	GetAllSubsets(set, subset, index + 1, allSubsets);
 }
@@ -51,7 +85,7 @@ bool SubsetSum_BruteForce(vector<int> set, int target)
 
 	for (int size = 0; size <= set.size(); size++)
 	{
-		PRINT("ºÎºĞÁıÇÕÀÇ ¿ø¼Ò °³¼ö: " << size << endl);
+		PRINT("ë¶€ë¶„ì§‘í•©ì˜ ì›ì†Œ ê°œìˆ˜: " << size << endl);
 
 		for (auto subset : allSubsets[size])
 		{
@@ -76,68 +110,68 @@ bool SubsetSum_BruteForce(vector<int> set, int target)
 
 bool SubsetSum_Backtracking(vector<int> set, int sum, int i)
 {
-	// ¸¸¾à ÇöÀç ºÎºĞÁıÇÕÀÇ ÇÕÀÌ target°ú °°´Ù¸é
+	// ë§Œì•½ í˜„ì¬ ë¶€ë¶„ì§‘í•©ì˜ í•©ì´ targetê³¼ ê°™ë‹¤ë©´
 	if (sum == 0)
 	{
 		return true;
 	}
 
-	// ¸¸¾à ÇöÀç ºÎºĞÁıÇÕÀÇ ÇÕÀÌ targetº¸´Ù Å©°Å³ª, ÁıÇÕÀÇ ³¡¿¡ µµ´ŞÇß´Ù¸é
+	// ë§Œì•½ í˜„ì¬ ë¶€ë¶„ì§‘í•©ì˜ í•©ì´ targetë³´ë‹¤ í¬ê±°ë‚˜, ì§‘í•©ì˜ ëì— ë„ë‹¬í–ˆë‹¤ë©´
 	if (i == set.size() || set[i] > sum)
 	{
 		return false;
 	}
 
-	// Case 1: sum¿¡¼­ set[i]À» »©¼­ Àç±Í È£Ãâ (i¹øÂ° ¿ø¼Ò¸¦ ºÎºĞÁıÇÕ¿¡ Ãß°¡)
-	// Case 2: sumÀ» ±×´ë·Î Àü´ŞÇÏ¿© Àç±Í È£Ãâ (i¹øÂ° ¿ø¼Ò¸¦ ºÎºĞÁıÇÕ¿¡ Ãß°¡ÇÏÁö ¾ÊÀ½)
+	// Case 1: sumì—ì„œ set[i]ì„ ë¹¼ì„œ ì¬ê·€ í˜¸ì¶œ (ië²ˆì§¸ ì›ì†Œë¥¼ ë¶€ë¶„ì§‘í•©ì— ì¶”ê°€)
+	// Case 2: sumì„ ê·¸ëŒ€ë¡œ ì „ë‹¬í•˜ì—¬ ì¬ê·€ í˜¸ì¶œ (ië²ˆì§¸ ì›ì†Œë¥¼ ë¶€ë¶„ì§‘í•©ì— ì¶”ê°€í•˜ì§€ ì•ŠìŒ)
 
 	return SubsetSum_Backtracking(set, sum - set[i], i + 1)
 		|| SubsetSum_Backtracking(set, sum, i + 1);
 }
 
-//memeo¶ó´Â 2Â÷¿ø Á¤¼ö º¤ÅÍÀÇ ÂüÁ¶¸¦ Ãß°¡·Î °¡Áø´Ù.
+//memeoë¼ëŠ” 2ì°¨ì› ì •ìˆ˜ ë²¡í„°ì˜ ì°¸ì¡°ë¥¼ ì¶”ê°€ë¡œ ê°€ì§„ë‹¤.
 bool SubsetSum_Memoization(vector<int>& set, int sum, int i,
 	vector<vector<int>>& memo)
 {
 	++RecursionCount;
 
-	//cout << i << ", " << sum << "ÇÔ¼ö°¡ È£ÃâµÊ" << endl;
-	//±âÀú Á¶°Ç Ã³¸® ÄÚµå
+	//cout << i << ", " << sum << "í•¨ìˆ˜ê°€ í˜¸ì¶œë¨" << endl;
+	//ê¸°ì € ì¡°ê±´ ì²˜ë¦¬ ì½”ë“œ
 	
-	// ¸¸¾à ÇöÀç ºÎºĞÁıÇÕÀÇ ÇÕÀÌ target°ú °°´Ù¸é
+	// ë§Œì•½ í˜„ì¬ ë¶€ë¶„ì§‘í•©ì˜ í•©ì´ targetê³¼ ê°™ë‹¤ë©´
 	if (sum == 0)
 	{
 		return true;
 	}
 
-	// ¸¸¾à ÇöÀç ºÎºĞÁıÇÕÀÇ ÇÕÀÌ targetº¸´Ù Å©°Å³ª, ÁıÇÕÀÇ ³¡¿¡ µµ´ŞÇß´Ù¸é
+	// ë§Œì•½ í˜„ì¬ ë¶€ë¶„ì§‘í•©ì˜ í•©ì´ targetë³´ë‹¤ í¬ê±°ë‚˜, ì§‘í•©ì˜ ëì— ë„ë‹¬í–ˆë‹¤ë©´
 	if (i == set.size() || set[i] > sum)
 	{
-		//cout << "³¡¿¡ µµ´ŞÇÔ" << endl;
+		//cout << "ëì— ë„ë‹¬í•¨" << endl;
 		return false;
 	}
 
-	// ÇöÀç »óÅÂ°¡ Ä³½Ã¿¡ ÀÖ´ÂÁö È®ÀÎ
+	// í˜„ì¬ ìƒíƒœê°€ ìºì‹œì— ìˆëŠ”ì§€ í™•ì¸
 	if (memo[i][sum] == UNKNOWN)
 	{
-		// ÇöÀç »óÅÂ¿¡ ´ëÇÑ ¼Ö·ç¼ÇÀ» ±¸ÇÏ¿© Ä³½Ã¿¡ ÀúÀå
+		// í˜„ì¬ ìƒíƒœì— ëŒ€í•œ ì†”ë£¨ì…˜ì„ êµ¬í•˜ì—¬ ìºì‹œì— ì €ì¥
 		bool append = SubsetSum_Memoization(set, sum - set[i], i + 1, memo);
 		bool ignore = SubsetSum_Memoization(set, sum, i + 1, memo);
 
 		memo[i][sum] = append || ignore;
-		//cout << "[" << i << "]" << "[" << sum << "]" <<"ÀÌ ÀúÀåµÊ" << endl;
-		// Ä³½Ã¿¡ ÀúÀåµÈ °ªÀ» ¹İÈ¯
+		//cout << "[" << i << "]" << "[" << sum << "]" <<"ì´ ì €ì¥ë¨" << endl;
+		// ìºì‹œì— ì €ì¥ëœ ê°’ì„ ë°˜í™˜
 		return memo[i][sum];
 	}
 	else
 	{
-		//cout << "Àç±Í ¼ö" << RecursionCount << endl;
-		//cout << i << ", " << sum << "ÀÌ Áßº¹µÊ" << endl;
-		// Ä³½Ã¿¡ ÀúÀåµÈ °ªÀ» ¹İÈ¯
+		//cout << "ì¬ê·€ ìˆ˜" << RecursionCount << endl;
+		//cout << i << ", " << sum << "ì´ ì¤‘ë³µë¨" << endl;
+		// ìºì‹œì— ì €ì¥ëœ ê°’ì„ ë°˜í™˜
 		return memo[i][sum];
 	}
 
-	//// Ä³½Ã¿¡ ÀúÀåµÈ °ªÀ» ¹İÈ¯
+	//// ìºì‹œì— ì €ì¥ëœ ê°’ì„ ë°˜í™˜
 	//return memo[i][sum];
 }
 
@@ -151,14 +185,14 @@ vector<string> types =
 
 void GetTime(clock_t& timer, string type)
 {
-	// ÇöÀç ½Ã°£¿¡¼­ timer¸¦ »©¼­ °æ°ú ½Ã°£À» °è»ê
+	// í˜„ì¬ ì‹œê°„ì—ì„œ timerë¥¼ ë¹¼ì„œ ê²½ê³¼ ì‹œê°„ì„ ê³„ì‚°
 	timer = clock() - timer;
 
-	// È­¸é¿¡ °æ°ú ½Ã°£ Ãâ·Â
-	cout << type << " ¹æ¹ı °æ°ú ½Ã°£: ";
+	// í™”ë©´ì— ê²½ê³¼ ì‹œê°„ ì¶œë ¥
+	cout << type << " ë°©ë²• ê²½ê³¼ ì‹œê°„: ";
 	cout << fixed << setprecision(5) << (float)timer / CLOCKS_PER_SEC << endl;
 
-	timer = clock(); // timer¸¦ ÇöÀç ½Ã°£À¸·Î ÃÊ±âÈ­
+	timer = clock(); // timerë¥¼ í˜„ì¬ ì‹œê°„ìœ¼ë¡œ ì´ˆê¸°í™”
 }
 
 int main()
@@ -187,7 +221,7 @@ int main()
 			break;
 		case 2:
 		{
-			// ¸Ş¸ğÀÌÁ¦ÀÌ¼Ç Å×ÀÌºí ÃÊ±âÈ­
+			// ë©”ëª¨ì´ì œì´ì…˜ í…Œì´ë¸” ì´ˆê¸°í™”
 			vector<vector<int>> memo(set.size(), vector<int>(7000, UNKNOWN));
 
 			found = SubsetSum_Memoization(set, target, 0, memo);
@@ -197,11 +231,11 @@ int main()
 
 		if (found)
 		{
-			cout << "¿ø¼Ò ÇÕÀÌ " << target << "ÀÎ ºÎºĞÁıÇÕÀÌ ÀÖ½À´Ï´Ù." << endl;
+			cout << "ì›ì†Œ í•©ì´ " << target << "ì¸ ë¶€ë¶„ì§‘í•©ì´ ìˆìŠµë‹ˆë‹¤." << endl;
 		}
 		else
 		{
-			cout << "¿ø¼Ò ÇÕÀÌ " << target << "ÀÎ ºÎºĞÁıÇÕÀÌ ¾ø½À´Ï´Ù." << endl;
+			cout << "ì›ì†Œ í•©ì´ " << target << "ì¸ ë¶€ë¶„ì§‘í•©ì´ ì—†ìŠµë‹ˆë‹¤." << endl;
 		}
 
 		GetTime(timer, types[i]);
