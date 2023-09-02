@@ -1410,8 +1410,13 @@ DP[4] -> 3 + 1 + 1 + 1이 된다.
 *모듈로 연산의 특성은 다음과 같다.
 
 {
+
 모듈러 연산의 속성
+
 1.(a + b) mod n = ((a mod n) + (b mod n)) mod n
+
 2.(a - b) mod n = ((a mod n) - (b mod n)) mod n
+
 3.(a x b) mod n = ((a mod n) * (b mod n)) mod n
+
 }
