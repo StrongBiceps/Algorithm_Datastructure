@@ -7,7 +7,15 @@ using namespace std;
 //32비트로 표현할 수 있는 범위를 벗어날 수 있으므로 결과 저장을 위해 long long형을 LL로 선언
 typedef long long LL;
 
-const LL MOD = 1000000007;
+//MOD연산이 적용되었다면 마지막 출력 값에서 원래의 값을 다시 얻는 것은 일반적으로 불가능하다.왜냐하면 모듈러 연산을
+//수행하면 원래의 정보 일부가 손실되기 때문이다.
+//예를 들어, 만약 10을 7로 나누면 나머지는 3이 된다.
+//그런데 3이라는 값만 가지고 원래의 숫자가 10인지, 아니면 다른 어떤 숫자(예: 17, 24 등)인지 알아낼 수 없다.이것은 모듈러 연산의 특성으로, 
+//나머지만으로는 원래의 값을 복구할 수 없다.
+//따라서 문제에서 요구하는 것이 모듈러 연산된 결과를 출력하는 것이라면,
+//그 결과값을 통해 원래의 값을 정확하게 복구하는 것은 불가능하다.
+
+const LL MOD =  1000000007;
 
 //재귀 반복식을 구현하기 위해 먼저 distance배열을 역순으로 변환한다. 이로써 목적지 위치부터 계산을 수행할 수 있다.
 //여기에는 여러 가지 이유가 있지만 가장 주된 이유는 현재 상태의 결과로부터 미래 상태를 계산하는 것과는 반대로 이전 상태의 결과
@@ -27,13 +35,15 @@ LL TravelItinerary(int n, vector<int> distance)
 	for (int i = 1; i <= n; i++)
 	{
 		cout << endl;
-		cout << i << "번째 반복-> "<<n+1-i<<"번 지점에 대한 계산" << endl;
+		cout << i << "번째 반복-> "<<n+1-i<<"번 지점에서 목적지까지 계산" << endl;
 
 		int dist = distance[i - 1];
 		cout << "dist["<<i-1<<"]: " << dist << endl;
 
+		//i에서 목적지까지 가는 경로의 수에 i-dist 지점에서 목적지까지 가는 경로의 수를 뺀다.
 		LL sum = sums[i] - sums[i - dist];
 		cout << "sum: sums[" << i << "] - sums[" << i - dist << "] : " << sum << endl;
+		cout << n-i+1 << "번 지점에서 " << n+1-(i - dist) << "번 지점까지의 경우의 수: "<<sum << endl;
 
 		DP[i] = (DP[i] + sum) % MOD;
 		cout << "DP[" << i << "] = DP[" << i << "] + " << sum<<" : "<<DP[i] << endl;
@@ -41,6 +51,13 @@ LL TravelItinerary(int n, vector<int> distance)
 		sums[i + 1] = (sums[i] + DP[i]) % MOD;
 		cout << "sums[" << i + 1 << "] = sums[" << i << "] + DP[" << i << "]: " << sums[i + 1] << endl;
 		//cout << sums[i + 1] << endl;
+	}
+
+	//나머지 연산에 의해 높은 인덱스 값이  낮은 인덱스 원소 값보다 작아지는 경우가 있다. 이로 인해 sums 뺄셈 연산을 할 때
+	//DP값이 음수가 되는 경우가 있다. 다음 코드를 적용하면 음수가 반환되는 경우를 없앨 수 있다.
+	if (DP[n] < 0)
+	{
+		cout << "음수 반환" << endl;
 	}
 
 	return (DP[n] < 0) ? DP[n] + MOD : DP[n];
