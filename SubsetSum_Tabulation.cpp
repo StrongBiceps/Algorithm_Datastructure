@@ -151,11 +151,7 @@ vector<vector<bool>> SubsetSum_Tabulation(vector<int>& set)
 	//µû¶ó¼­ 7À» »°À» ¶§ ¸¸µé¾îÁú ¼ö ÀÖ´Â°¡¸¦ º¸´Â °ÍÀÌ´Ù. ¸¸¾à ¸¸µé¾îÁú ¼ö ÀÖ´Ù¸é 7À» ´õÇÏ¸é  7¿¡¼­ 10±îÁö ¸¸µé ¼ö ÀÖ´Ù. ¶ÇÇÑ 9¿¡¼­µµ ÇØ´ç °ªÀ» 
 	//¸¸µé ¼ö ÀÖ°Ô µÈ´Ù. DP[i-1][sum]À» °ËÅäÇÏ´Â °ÍÀº set[i-1]ÀÌ ´õÇØÁöÁö ¾Ê¾ÒÀ» °æ¿ì¸¸ °ËÅäÇÏ±â ¶§¹®¿¡ if-else·Î ³ª´¶´Ù.
 	
-<<<<<<< HEAD
 	//¸¸¾à ÀÎµ¦½º i=set.sizeÀÏ ¶§´Â ¸¶Áö¸· ¿ø¼Ò±îÁöÀÇ ÇÕÀÌ DP[set.size]¿¡ ÀúÀåµÈ´Ù.
-=======
-	//ë§Œì•½ ì¸ë±ìŠ¤ i=set.sizeì¼ ë•ŒëŠ” ë§ˆì§€ë§‰ ì›ì†Œê¹Œì§€ì˜ í•©ì´ DP[set.size]ì— ì €ìž¥ëœë‹¤.
->>>>>>> 36958ff8f3035530e08b316d8a953353b498398f
 	for (int i = 1; i <= set.size(); i++)
 	{
 		for (int sum = 1; sum <= maxSum; sum++)
