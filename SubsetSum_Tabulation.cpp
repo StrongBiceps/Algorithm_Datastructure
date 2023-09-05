@@ -154,8 +154,7 @@ vector<vector<bool>> SubsetSum_Tabulation(vector<int>& set)
 	//예를 들어 원소 7일때 7이 만들어질 수 있는 경우는 저장되지 않는다. 항상 자신 이전 원소들의 조합의 경우만 true로 설정한다.
 	//만약 i 인덱스에서 i-1까지의 합보다 sum이 크다면 DP[i][sum]=false가 될 것이다.
 	
-	//만약 인덱스 i=set.size일 때는 i까지의 합은 생각 안하나 라고 느낄 수 있는데, 벡터의 크기가 size+1이고 마지막 원소에 대한
-	//결과는 DP[size+1][sum]에 저장된다.
+	//만약 인덱스 i=set.size일 때는 마지막 원소까지의 합이 DP[set.size]에 저장된다.
 	for (int i = 1; i <= set.size(); i++)
 	{
 		for (int sum = 1; sum <= maxSum; sum++)
