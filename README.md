@@ -2669,3 +2669,10 @@ For i = 1 to N:
 				DP(i-1,cost-price,count-quantity)+value
 
 즉, 각각의 상태는 현재 인덱스, 상품 구매 비용, 상품 개수에 의해 결정된다. 유효한 cost와 count값에 대해 i번째 상품에서의 이익은 같은 cost와 count값에 대한 i-1번째 상품에서의 이익(DP[i-1][cost][count])와 같거나 또는 i번째 상품을 추가할 경우에 나타날 수 있는 이익(DP[i-1][cost-price][count-quantity]+value)와 같다.
+
+# 2023.09.07
+
+# Double-Ended_Queue(Deque)
+
+Deque 자료구조는 배열을 순환식으로 구성하여 양방향 접근이 가능하게 한다. 이 때 순환식 구조를 구현하기 위해 front와 rear의 업데이트를 덱의 크기인 SIZE에 대해서 %연산을 이용한다. 또한 가득 찬 경우에는 마지막 칸을
+비워두기 때문에 원형을 유지할 수 있다.
