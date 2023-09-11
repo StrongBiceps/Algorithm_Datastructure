@@ -3344,3 +3344,74 @@ std::cout<<*(arr.data()+1)<<std::endl;
 std::array는 깊은 비교를 위한 관계 연산자와 깊은 복사를 위한 복사 할당 연산자도 지원한다. std::array에 저장되는 데이터 타입 크기 비교를 지원할 경우, 이들 관계 연산자를 이용하여 두 std::array배열을 비교하는 용도로 사용할 수 있다. 단, 비교 대상인 두 array의 크기가 같아야 한다.
 
 C-style 배열에 대해서도 관계 연산자를 사용할 수 있지만, 이 경우에는 배열 원소 값을 비교하는 것이 아니라 포인터 주소 값을 비교한다. 즉, 깊은 비교 대신 얕은 비교를 수행한다.
+
+# Common_Type build_array function
+
+<빠르고 범용적인 데이터 저장 컨테이너 만들기>
+
+다양한 타입의 데이터 여러 개를 인자로 받아 공통 타입으로 변환하는 함수를 만들어 본다. 이 함수가 반환하는 컨테이너는 모든 인자를 공통 타입으로 변환하여 저장하며, 전체 원소를 빠르게 순회할 수 있어야 한다.
+
+먼저 컨테이너를 생성하는 build_array() 함수를 선언한다. 이 함수는 빠른 원소 순회를 보장하는 array를 반환한다. 임의 개수의 매개변수를 허용하기 위해 가변 템플릿을 사용한다.
+
+template<typename ...args>
+
+array::<?,?> build_array(args&&...args)
+
+반환된 컨테이너는 빠르게 순회할 수 있어야 한다는 조건이 있으므로 배열 또는 벡터를 사용할 수 있다.
+
+template<typename ...Args>
+
+auto build_array(Args&&...args)->array<typename common_type<Args...>::type, ? >
+
+{
+
+using commonType = typename common_type<Args...>::type
+
+}
+
+array를 사용하려면 원소의 타입과 원소 개수를 지정해야 한다. array에 저장할 원소의 타입을 결정하기 위해 common_type템플릿을 사용할 수 있다. 이 작업은 함수 인자에 의존적이기 때문에 함수 반환형을 후행 리턴 타입으로 지정한다.
+
+#include <iostream>
+
+#include <array>
+
+#include <type_traits>
+
+using namespace std;
+
+template<typename ...Args>
+
+auto build_array(Args...args)->array<typename common_type<Args...>::type, sizeof...(args) >
+
+//->이후에오는코드는후행리턴타입이다.
+
+//common_type<Args...>는가변템플릿인자로받아들인여러타입을하나의타입으로묶는다.
+
+//forward는보편참조를반환한다.
+
+{
+
+using commonType = typename common_type<Args...>::type
+
+return { forward<commonType>((Args)args)... };
+
+}
+
+int main()
+{
+
+auto data = build_array(1, 0u, 'a', 3.2f, false);
+
+for (auto i : data)
+
+cout << i << endl;
+
+cout << endl;
+
+}
+
+함수에 전달된 인자들이 모두 float으로 캐스팅될 수 있기 때문에, 최종 출력은 float으로 출력됩니다. 그러나 다음과 같이 입력한다면 에러가 발생한다.
+
+auto data2=build_array(1,"packt",2.0);
+
+소스 코드를 이와 같ㅇ리 작성할 경우, 모든 데이터 타입을 하나의 공통 타입으로 변환할 수 없어서 에러가 발생합니다. 이는 문자열과 숫자를 모두 표현할 수 있는 공통의 자료형이 존재하지 않기 때문이다. 이 코드의 build_array()같은 빌더 함수는 입력 데이터 타입이 모호할 때에도 사용할 수 있다.
