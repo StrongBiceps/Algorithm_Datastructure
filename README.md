@@ -3624,3 +3624,35 @@ forward_list와 유사하면서 더 많은 기능을 제공하는 사용자 정�
 이번 연습문제에서 initializer_list를 이용하여 연결 리스트를 초기화하는 방법을 사용했다. 
 push(),pop_front(),back()같은 함수를 사용할 수도 있으며, 이 예제에서는 sll2 리스트에 
 push_front() 함수로 새로운 원소를 추가했다. sll2가 깊은 복사에 의해 생성되었기 때문에 sll2에 새 원소를 추가해도 sll 리스트에는 여전히 네 개의 원소가 있음을 확인할 수 있다.
+
+# std:list 
+
+*std::list
+
+앞에서 설명했듯이 forward_list는 아주 기본적인 형태로 구현된 연결 리스트이다. 
+
+forward_list는 다른 유용한 기능 중에서도 리스트 끝에 원소 추가, 역방향 이동, 리스트 크기 반환 등의 기능은 제공하지 않는다. 이는 메모리를 적게 쓰고, 빠른 성능을 유지하기 위함이다.
+
+ 이외에도 forward_list의 반복자는 매우 적은 기능만 지원한다. 컨테이너의 크기를 얻어오거나 또는 자료 구조 맨 뒤에 새로운 데이터를 추가하는 등의 기능은 매우 유용하고 빈번하게 사용되지만 forward_list에서는 지원되지 않는다. forward_list는 빠른 원소 삽입이 필요한 모든 경우에 어울리는 컨테이너는 아니다. 이러한 forward_list의 단점을 보완하기 위해 C++는 std:list를 제공한다. std::list는 양쪽 방향으로 연결된 리스트, 즉 이중 연결 리스트이다. 덕분에 forward_list에 비해 더 많은 기능을 제공한다. 
+
+다만 forward_list에 비해 더 많은 메모리를 사용한다. 이중 연결 리스트에서 사용하는 노드의 기본 형태는 다음과 같다.
+
+struct doubly_linked_list_node
+
+{
+
+	int data;
+
+	doubly_linked_list_node* next;
+
+	doubly_linked_list_node* prev;
+
+};
+
+앞 코드에서 볼 수 있듯이 이중 연결 리스트 노드는 이전 노드를 가리키는 포인터가 추가로 있다. 이 포인터를 이용하여 역방향으로 이동할 수 있으며, 맨 마지막 원소와 리스트 크기를 따로 저장하여 빠른 push_backI() 또는 size()함수를 지원할 수 있다. forward_list와 마찬가지로 템플릿 매개변수로 사용자 정의 할당자를 지정할 수도 있다.
+
+*std::list 멤버함수
+
+list에서 제공하는 대부분의 함수는 forward_list의 함수와 같거나 유사하며, 약간의 차이가 있다. 예를 들어 forward_list에서 _after로 끝나는 함수는 list에서 _after로 끝나지 않는 형태로 바뀐다. 즉 insert_after()와 emplace_after() 함수는 insert()와 emplace()로 대응된다. 
+
+std::list에서는 원소 이동을 역방향으로도 할 수 있으므로 원소 삽입을 위해 특정 원소의 이전 원소 반복자를 제공하지 않아도 되며, 대신 정확하게 새로운 원소가 삽입될 위치를 가리키는 반복자를 함수 인자로 전달한다. 이외에도 std::list는 빠른 push_back(),emplace_back(),pop_back()함수를 제공한다. 
