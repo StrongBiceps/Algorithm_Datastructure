@@ -3785,3 +3785,60 @@ deq.erase(deq.begin()+3,deq.end()); //{1,2,3}
 
 4.마지막으로 여러 사람이 프린터에 작업을 추가하는 시나리오를 구현하고, 프린터는 차례대로 인쇄 작업을 수행한다.
 
+# Tree Traversal Algorithm
+
+*전위 순회(preorder traversal): 이 방법은 현재 노드를 먼저 방문하고, 그 다음은현재 노드의 왼쪽 하위노드, 마지막으로는 오른쪽 하위 노드를 재귀적인 방식으로 탐색한다.
+
+static void preOrder(node* Start)
+
+{
+
+	if(!Start)
+
+ 		return;
+
+   	std::cout<<Start->position<<",";
+
+    	preOrder(Start->first);
+
+     	preOrder(Start->second);
+
+}
+
+*중위 순회(inorder traversal): 왼쪽노드, 현재 노드, 오른쪽 노드를 방문하는 방법
+
+static void inOrder(node* start)
+
+{
+
+	if(!start)
+
+  		return;
+
+    	inOrder(start->first);
+
+     	std::cout<<start->position<<",";
+
+      	inOrder(start->second);
+
+}
+
+*후위 순회(post-order traversal): 두 자식 노드를 먼저 방문 후, 현재 노드 방문
+
+static void postOrder(node* start)
+
+{
+
+	if(!start)
+
+ 		return;
+
+   	postOrder(start->first);
+
+     	postOrder(start->second);
+
+        std::cout<<start->position<<",";
+
+ }
+
+ *레벨 순회(level order traversal): 트리의 맨 위 레벨부터 아래 레벨까지 왼쪽 노드에서 오른쪽 노드를 방문하는 순서이다. 저장소 예제 코드로 확인한다.
