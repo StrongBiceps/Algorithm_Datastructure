@@ -49,6 +49,7 @@ vector<int> BellmanFord(vector<Edge> edges, int V, int start)
 			//만약 5(무한대)->4의 거리가 업데이트 되어 버리면 1->5->4가 가능하다는 상황이 된다. 하지만
 			//1에서 바로 5로 갈 수는 없다. 즉 거리가 한 번이라도 업데이트 된 상태라는 것은 해당 정점까지
 			//경로가 이어져 있고, 거리가 계산된 상태라는 것이다.
+			//위 경우에서 i = 5 일 때 5->4의 거리가 업데이트된다.
 			if (distance[e.src]==UNKNOWN)
 			{
 				continue;
