@@ -3,16 +3,20 @@
 #include <vector>
 #include <iostream>
 
-/* ¾Æ·¡ ÄÚµå¸¦{0,1,3}
+//ë²¨ë§Œ í¬ë“œ ì•Œê³ ë¦¬ì¦˜ê³¼ ë‹¤ë¥¸ ì ì€ ë²¨ë§Œ í¬ë“œ ì•Œê³ ë¦¬ì¦˜ì€ ëª¨ë“  ì—ì§€ì— ëŒ€í•´ V-1ë²ˆ ê²€ì‚¬ë¥¼ ì§„í–‰í•´ì•¼ í•˜ì§€ë§Œ, DPë°©ì‹ì˜ ì•„ëž˜ ì½”ë“œëŠ”
+//ëª©í‘œ ì •ì ë¶€í„° ì‹œìž‘ ì •ì ê¹Œì§€ ê±°ìŠ¬ëŸ¬ ì˜¬ë¼ê°€ë©° ëª¨ë“  ê²½ìš°ì˜ ìˆ˜ë¥¼ ê²€í† í•˜ë¯€ë¡œ ê° ì—ì§€ì— ëŒ€í•´ V-1ë²ˆ ê²€ì‚¬ë¥¼ í•˜ëŠ” ë¡œì§ê³¼ëŠ” ë‹¤ë¥´ë‹¤
+//ì¦‰ ëª©í‘œ ì •ì ë¶€í„° ì‹œìž‘ ì •ì ê¹Œì§€ ì—°ê²°ëœ ëª¨ë“  ê²½ë¡œì˜ ë¹„ìš©ì„ ê²€í† í•˜ì—¬ ì—…ë°ì´íŠ¸í•˜ëŠ” ë°©ì‹ì´ë‹¤. ë”°ë¼ì„œ ë°˜ë³µë¬¸ì´ ì•„ë‹Œ ìž¬ê·€ë°©ì‹ì´
+//ì‚¬ìš©ëœë‹¤.
+/* ì•„ëž˜ ì½”ë“œë¥¼{0,1,3}
 			  {1,2,2}
 			  {2,3,1}
 			  {3,1,5}
 
 			  0->1->2->3
 				 <------
-ÀÇ ±×·¡ÇÁ¸¦ ÀÔ·ÂÀ¸·Î »ç¿ëÇØ¼­ ÀÌÇØÇØºÁ¶ó.
+ì˜ ê·¸ëž˜í”„ë¥¼ ìž…ë ¥ìœ¼ë¡œ ì‚¬ìš©í•´ì„œ ì´í•´í•´ë´ë¼.
 
-ÀüÄ¡ ±×·¡ÇÁ´Â ´ÙÀ½°ú °°´Ù.
+ì „ì¹˜ ê·¸ëž˜í”„ëŠ” ë‹¤ìŒê³¼ ê°™ë‹¤.
 
 			{1,0,3}
 			{2,1,2}
@@ -23,7 +27,7 @@
 				----->
 
 
-				±×·¡ÇÁ 2
+				ê·¸ëž˜í”„ 2
 			{0,1,3}
 			{1,2,2}
 			{2,3,1}
@@ -34,12 +38,12 @@
 			0->1->2->3->5
 				   ->4->
 
-			ÀüÄ¡ ±×·¡ÇÁ
+			ì „ì¹˜ ê·¸ëž˜í”„
 
 			0<-1<-2<-3<-5
 				   <-4<-
 
-					±×·¡ÇÁ 3
+					ê·¸ëž˜í”„ 3
 			{0,1,3}
 			{1,2,2}
 			{2,3,1}
@@ -48,89 +52,89 @@
 			0->1->2->3
 				   ->4
 
-			ÀüÄ¡ ±×·¡ÇÁ
+			ì „ì¹˜ ê·¸ëž˜í”„
 
 			0<-1<-2<-3
 				   <-4
 */
 
-//À§¿¡¼­ ¸¶Áö¸· ±×·¡ÇÁ¸¦ ÀÔ·ÂÀ¸·Î ÇÒ ¶§¸¦ »ìÆìº¸¸é, ÀüÄ¡ ±×·¡ÇÁ¿¡¼­ Á¤Á¡ 5¿¡ ´ëÇØ¼­ Àç±Í¸¦ ÁøÇàÇÒ ¶§, 0±îÁö Àç±Í°¡ ±í¾îÁø ÈÄ
-//¸®ÅÏµÈ °ªµéÀÌ ÀÌÀü Àç±Í¿¡ »ç¿ëµÇ°í ÀÖ´Ù. ÀÌ ¹æ¹ýÀº ÇÏÇâ½Ä ¹æ¹ýÀÌ´Ù. ÇöÀç °ªÀÌ ´ÙÀ½ Àç±Í¿¡ ¿µÇâÀ» ÁÖ´Â »óÇâ½ÄÇÏ°í´Â ´Ù¸¥ ¹æ¹ýÀÌ´Ù.
-//¶ÇÇÑ À§ ±×·¡ÇÁ¿¡¼­ ¸Þ¸ðÀÌÁ¦ÀÌ¼Ç¿¡¼­ÀÇ Áßº¹ °è»ê ¹æÁö°¡ ³ªÅ¸³¯ ¼ö ÀÖ´Ù. 3,4¿¡¼­ Ãâ¹ßÇÑ´Ù°í ÇÏ¸é, 2·Î °¥ ¶§ ±íÀÌ¿Í ³ëµå°¡ °°Àº Áßº¹ °è»êÀÌ ¹ß»ýÇÑ´Ù.
-//µû¶ó¼­ 3ÀÌ ¸ÕÀú È£ÃâµÇ¹Ç·Î 4¿¡¼­ memo[{2,3}]À» Áßº¹ °ªÀ¸·Î »ç¿ëÇÏ°Ô µÈ´Ù. Áï 3¿¡¼­ ÀÌ¹Ì 2±îÁöÀÇ °Å¸®´Â °è»êÀÌ ³¡³µÀ¸¹Ç·Î 4¿¡¼­´Â 2ºÎÅÍ Ãâ¹ß ÁöÁ¡±îÁöÀÇ
-//°Å¸®¸¦ °è»êÇÒ ÇÊ¿ä°¡ ¾ø´Ù. °°Àº °æ·ÎÀÌ±â ¶§¹®ÀÌ´Ù. µû¶ó¼­ 2ÀÌÈÄÀÇ Àç±Í´Â ¹æÁöµÈ´Ù.
+//ìœ„ì—ì„œ ë§ˆì§€ë§‰ ê·¸ëž˜í”„ë¥¼ ìž…ë ¥ìœ¼ë¡œ í•  ë•Œë¥¼ ì‚´íŽ´ë³´ë©´, ì „ì¹˜ ê·¸ëž˜í”„ì—ì„œ ì •ì  5ì— ëŒ€í•´ì„œ ìž¬ê·€ë¥¼ ì§„í–‰í•  ë•Œ, 0ê¹Œì§€ ìž¬ê·€ê°€ ê¹Šì–´ì§„ í›„
+//ë¦¬í„´ëœ ê°’ë“¤ì´ ì´ì „ ìž¬ê·€ì— ì‚¬ìš©ë˜ê³  ìžˆë‹¤. ì´ ë°©ë²•ì€ í•˜í–¥ì‹ ë°©ë²•ì´ë‹¤. í˜„ìž¬ ê°’ì´ ë‹¤ìŒ ìž¬ê·€ì— ì˜í–¥ì„ ì£¼ëŠ” ìƒí–¥ì‹í•˜ê³ ëŠ” ë‹¤ë¥¸ ë°©ë²•ì´ë‹¤.
+//ë˜í•œ ìœ„ ê·¸ëž˜í”„ì—ì„œ ë©”ëª¨ì´ì œì´ì…˜ì—ì„œì˜ ì¤‘ë³µ ê³„ì‚° ë°©ì§€ê°€ ë‚˜íƒ€ë‚  ìˆ˜ ìžˆë‹¤. 3,4ì—ì„œ ì¶œë°œí•œë‹¤ê³  í•˜ë©´, 2ë¡œ ê°ˆ ë•Œ ê¹Šì´ì™€ ë…¸ë“œê°€ ê°™ì€ ì¤‘ë³µ ê³„ì‚°ì´ ë°œìƒí•œë‹¤.
+//ë”°ë¼ì„œ 3ì´ ë¨¼ì € í˜¸ì¶œë˜ë¯€ë¡œ 4ì—ì„œ memo[{2,3}]ì„ ì¤‘ë³µ ê°’ìœ¼ë¡œ ì‚¬ìš©í•˜ê²Œ ëœë‹¤. ì¦‰ 3ì—ì„œ ì´ë¯¸ 2ê¹Œì§€ì˜ ê±°ë¦¬ëŠ” ê³„ì‚°ì´ ëë‚¬ìœ¼ë¯€ë¡œ 4ì—ì„œëŠ” 2ë¶€í„° ì¶œë°œ ì§€ì ê¹Œì§€ì˜
+//ê±°ë¦¬ë¥¼ ê³„ì‚°í•  í•„ìš”ê°€ ì—†ë‹¤. ê°™ì€ ê²½ë¡œì´ê¸° ë•Œë¬¸ì´ë‹¤. ë”°ë¼ì„œ 2ì´í›„ì˜ ìž¬ê·€ëŠ” ë°©ì§€ëœë‹¤.
 using namespace std;
 
 const int UNKNOWN = 1e9;
 
-//Á¤Á¡ °³¼ö¸¦ ³ªÅ¸³»´Â V¿Í E¸¦ Àü¿ª º¯¼ö·Î ¼±¾ðÇÑ´Ù. ¶ÇÇÑ ÀÎÁ¢ ¸®½ºÆ®¸¦ ³ªÅ¸³»´Â adj¿Í ¿¡Áö °¡ÁßÄ¡¸¦ ÀúÀåÇÒ
-//weight¸¦ 2Â÷¿ø Á¤¼ö º¤ÅÍ ÀÚ·áÇüÀ¸·Î ¼±¾ðÇÑ´Ù. ¸¶Áö¸·À¸·Î ¸Þ¸ðÀÌÁ¦ÀÌ¼Ç Å×ÀÌºíÀ» ÀúÀåÇÒ memo¸¦ ¼±¾ðÇÑ´Ù.
-//ÀÌ¶§ mapÀ» »ç¿ëÇÏ¿© ÀÌ¹Ì Å°°¡ Á¸ÀçÇÏ´ÂÁö, ±×¸®°í °ªÀÌ UNKNOWNÀÎÁö¸¦ È®ÀÎÇÑ´Ù.
+//ì •ì  ê°œìˆ˜ë¥¼ ë‚˜íƒ€ë‚´ëŠ” Vì™€ Eë¥¼ ì „ì—­ ë³€ìˆ˜ë¡œ ì„ ì–¸í•œë‹¤. ë˜í•œ ì¸ì ‘ ë¦¬ìŠ¤íŠ¸ë¥¼ ë‚˜íƒ€ë‚´ëŠ” adjì™€ ì—ì§€ ê°€ì¤‘ì¹˜ë¥¼ ì €ìž¥í• 
+//weightë¥¼ 2ì°¨ì› ì •ìˆ˜ ë²¡í„° ìžë£Œí˜•ìœ¼ë¡œ ì„ ì–¸í•œë‹¤. ë§ˆì§€ë§‰ìœ¼ë¡œ ë©”ëª¨ì´ì œì´ì…˜ í…Œì´ë¸”ì„ ì €ìž¥í•  memoë¥¼ ì„ ì–¸í•œë‹¤.
+//ì´ë•Œ mapì„ ì‚¬ìš©í•˜ì—¬ ì´ë¯¸ í‚¤ê°€ ì¡´ìž¬í•˜ëŠ”ì§€, ê·¸ë¦¬ê³  ê°’ì´ UNKNOWNì¸ì§€ë¥¼ í™•ì¸í•œë‹¤.
 int V, E;
 vector<vector<int>> weight;
 vector<vector<int>> adj;
 
 //ex)SP(1,7): UNKNOWN
-//map<pair<Á¤Á¡,±íÀÌ>,°Å¸®>
+//map<pair<ì •ì ,ê¹Šì´>,ê±°ë¦¬>
 map<pair<int, int>, int> memo;
 
 
-//»õ·Î¿î ÇÔ¼ö¸¦ Á¤ÀÇÇÑ´Ù. ÀÌ ÇÔ¼ö´Â Á¤¼öÇü depth¿Í node,2Â÷¿ø Á¤¼ö º¤ÅÍ adj¿Í weight¸¦ ÀÎÀÚ·Î ¹Þ´Â´Ù. ÀÌ¶§ adj¿Í weight´Â ÂüÁ¶Çü
-//À¸·Î ¼±¾ðÇÑ´Ù.
-//ÀÌ ÇÔ¼ö´Â ÀüÄ¡ ±×·¡ÇÁ·Î °Å¸®¸¦ ¾÷µ¥ÀÌÆ®ÇÑ´Ù. µû¶ó¼­ °¢ Á¤Á¡¿¡¼­ source±îÁö °¡´Â Á¤Á¡¿¡ ´ëÇÑ ¾÷µ¥ÀÌÆ®¸¦ ÁøÇàÇÏ´Â ÇÔ¼öÀÌ´Ù.
+//ìƒˆë¡œìš´ í•¨ìˆ˜ë¥¼ ì •ì˜í•œë‹¤. ì´ í•¨ìˆ˜ëŠ” ì •ìˆ˜í˜• depthì™€ node,2ì°¨ì› ì •ìˆ˜ ë²¡í„° adjì™€ weightë¥¼ ì¸ìžë¡œ ë°›ëŠ”ë‹¤. ì´ë•Œ adjì™€ weightëŠ” ì°¸ì¡°í˜•
+//ìœ¼ë¡œ ì„ ì–¸í•œë‹¤.
+//ì´ í•¨ìˆ˜ëŠ” ì „ì¹˜ ê·¸ëž˜í”„ë¡œ ê±°ë¦¬ë¥¼ ì—…ë°ì´íŠ¸í•œë‹¤. ë”°ë¼ì„œ ê° ì •ì ì—ì„œ sourceê¹Œì§€ ê°€ëŠ” ì •ì ì— ëŒ€í•œ ì—…ë°ì´íŠ¸ë¥¼ ì§„í–‰í•˜ëŠ” í•¨ìˆ˜ì´ë‹¤.
 
 
-//º§¸¸-Æ÷µå¿Í´Â ¹Ý´ë·Î V-1¿¡¼­ 1±îÁö ¾÷µ¥ÀÌÆ®ÇÑ´Ù. Àç±Í´Â depth = 0±îÁö µµ´ÞÇÏ³ª, 0¿¡¼­´Â °Å¸®ÀÇ ¾÷µ¥ÀÌÆ®°¡ ÀÏ¾î³ªÁö ¾Ê°í °ªÀ» ¹«Á¶°Ç ¹ÝÈ¯ÇÑ´Ù.
-//¸¸¾à depth 0ÀÏ ¶§´Â memo[{i,0}]¿¡ ´ëÇØ¼­´Â ¸ðµÎ °ªÀÌ UNKNOWN ¾Æ´Ï¸é 0ÀÌ´Ù. µû¶ó¼­ ¹«Á¶°Ç °ªÀ» ¹ÝÈ¯ÇÏ°Ô µÇ¾î ÀÖ´Ù. Áï °Å¸®´Â V-1¹ø ¾÷µ¥ÀÌÆ®µÈ´Ù.
-//Áï V¹øÀÇ ¾÷µ¥ÀÌÆ®¸¦ ¸·¾ÒÀ¸¹Ç·Î »çÀÌÅ¬À» ¹æÁöÇÑ´Ù. ÇÏÁö¸¸ À½ÀÇ °¡ÁßÄ¡ »çÀÌÅ¬ÀÌ Á¸ÀçÇÏ´Â ±×·¡ÇÁ´Â ¿ø·¡ ÃÖ´Ü °Å¸®¸¦ ±¸ÇÒ ¼ö ¾ø´Ù. ¹«ÇÑ Àç±Í¸¦ ¸·´Â °ÍÀÏ »ÓÀÌ´Ù.
+//ë²¨ë§Œ-í¬ë“œì™€ëŠ” ë°˜ëŒ€ë¡œ V-1ì—ì„œ 1ê¹Œì§€ ì—…ë°ì´íŠ¸í•œë‹¤. ìž¬ê·€ëŠ” depth = 0ê¹Œì§€ ë„ë‹¬í•˜ë‚˜, 0ì—ì„œëŠ” ê±°ë¦¬ì˜ ì—…ë°ì´íŠ¸ê°€ ì¼ì–´ë‚˜ì§€ ì•Šê³  ê°’ì„ ë¬´ì¡°ê±´ ë°˜í™˜í•œë‹¤.
+//ë§Œì•½ depth 0ì¼ ë•ŒëŠ” memo[{i,0}]ì— ëŒ€í•´ì„œëŠ” ëª¨ë‘ ê°’ì´ UNKNOWN ì•„ë‹ˆë©´ 0ì´ë‹¤. ë”°ë¼ì„œ ë¬´ì¡°ê±´ ê°’ì„ ë°˜í™˜í•˜ê²Œ ë˜ì–´ ìžˆë‹¤. ì¦‰ ê±°ë¦¬ëŠ” V-1ë²ˆ ì—…ë°ì´íŠ¸ëœë‹¤.
+//ì¦‰ Vë²ˆì˜ ì—…ë°ì´íŠ¸ë¥¼ ë§‰ì•˜ìœ¼ë¯€ë¡œ ì‚¬ì´í´ì„ ë°©ì§€í•œë‹¤. í•˜ì§€ë§Œ ìŒì˜ ê°€ì¤‘ì¹˜ ì‚¬ì´í´ì´ ì¡´ìž¬í•˜ëŠ” ê·¸ëž˜í”„ëŠ” ì›ëž˜ ìµœë‹¨ ê±°ë¦¬ë¥¼ êµ¬í•  ìˆ˜ ì—†ë‹¤. ë¬´í•œ ìž¬ê·€ë¥¼ ë§‰ëŠ” ê²ƒì¼ ë¿ì´ë‹¤.
 
-//ÀÌ ¾Ë°í¸®ÁòÀº ÀüÄ¡ ±×·¡ÇÁ¸¦ »ç¿ëÇÏ¿© µµÂø ÁöÁ¡¿¡¼­ Ãâ¹ß ÁöÁ¡À¸·Î °Å½½·¯ ¿Ã¶ó°£´Ù. ÀÌ °úÁ¤¿¡¼­ Àç±Í¸¦ ÅëÇØ¼­ µµÂø ÁöÁ¡¿¡¼­ Ãâ¹ß ÁöÁ¡±îÁö °¡´ÉÇÑ ¸ðµç °æ·ÎÀÇ
-//°Å¸®¸¦ ºñ±³ÇÏ¿© ¾÷µ¥ÀÌÆ®ÇÑ´Ù.
+//ì´ ì•Œê³ ë¦¬ì¦˜ì€ ì „ì¹˜ ê·¸ëž˜í”„ë¥¼ ì‚¬ìš©í•˜ì—¬ ë„ì°© ì§€ì ì—ì„œ ì¶œë°œ ì§€ì ìœ¼ë¡œ ê±°ìŠ¬ëŸ¬ ì˜¬ë¼ê°„ë‹¤. ì´ ê³¼ì •ì—ì„œ ìž¬ê·€ë¥¼ í†µí•´ì„œ ë„ì°© ì§€ì ì—ì„œ ì¶œë°œ ì§€ì ê¹Œì§€ ê°€ëŠ¥í•œ ëª¨ë“  ê²½ë¡œì˜
+//ê±°ë¦¬ë¥¼ ë¹„êµí•˜ì—¬ ì—…ë°ì´íŠ¸í•œë‹¤.
 int ShortestPath_Memoization(int depth, int node,
 	vector<vector<int>>& adj, vector<vector<int>>& weight)
 {
-	//ÀÌ ¾Ë°í¸®Áò¿¡¼­´Â ÀÏ¹ÝÀûÀÎ ±íÀÌ ¿ì¼± Å½»öÀ» »ç¿ëÇÏ¸ç, ´Ù¸¸ ÇÔ¼ö ³¡ ºÎºÐ¿¡¼­ {node,depth} ½Ö¿¡ ´ëÇÑ °á°ú¸¦ memo¿¡ ÀúÀåÇÑ´Ù.
-	//ÇÔ¼ö ½ÃÀÛ ºÎºÐ¿¡¼­´Â memo¸¦ È®ÀÎÇÏ¿©, ÇØ´ç Å°°¡ ÀÌ¹Ì Á¸ÀçÇÏ¸é ÀúÀåµÈ °ªÀ» ¹ÝÈ¯ÇÑ´Ù.
+	//ì´ ì•Œê³ ë¦¬ì¦˜ì—ì„œëŠ” ì¼ë°˜ì ì¸ ê¹Šì´ ìš°ì„  íƒìƒ‰ì„ ì‚¬ìš©í•˜ë©°, ë‹¤ë§Œ í•¨ìˆ˜ ë ë¶€ë¶„ì—ì„œ {node,depth} ìŒì— ëŒ€í•œ ê²°ê³¼ë¥¼ memoì— ì €ìž¥í•œë‹¤.
+	//í•¨ìˆ˜ ì‹œìž‘ ë¶€ë¶„ì—ì„œëŠ” memoë¥¼ í™•ì¸í•˜ì—¬, í•´ë‹¹ í‚¤ê°€ ì´ë¯¸ ì¡´ìž¬í•˜ë©´ ì €ìž¥ëœ ê°’ì„ ë°˜í™˜í•œë‹¤.
 
-	// ¸Ê¿¡ Å°°¡ ÀÖ´ÂÁö¸¦ È®ÀÎ
-	//source°¡ node·Î µé¾î¿À°Ô µÈ´Ù¸é 0ÀÌ ¹ÝÈ¯µÇ°Ô µÈ´Ù.
-	//source°¡ 0ÀÏ ¶§´Â 1ºÎÅÍ if¹® ¾Æ·¡ ÄÚµåµéÀÌ ½ÇÇàµÇ°Ô µÈ´Ù.
+	// ë§µì— í‚¤ê°€ ìžˆëŠ”ì§€ë¥¼ í™•ì¸
+	//sourceê°€ nodeë¡œ ë“¤ì–´ì˜¤ê²Œ ëœë‹¤ë©´ 0ì´ ë°˜í™˜ë˜ê²Œ ëœë‹¤.
+	//sourceê°€ 0ì¼ ë•ŒëŠ” 1ë¶€í„° ifë¬¸ ì•„ëž˜ ì½”ë“œë“¤ì´ ì‹¤í–‰ë˜ê²Œ ëœë‹¤.
 
 	cout << "memoization called(" << node << ", " << depth << ")" << endl << endl;
 	if (memo.find({ node, depth }) != memo.end())
 	{
-		cout << "memo[{" << node << ", " << depth << "}] Áßº¹: " << memo[{node, depth}] << endl;
+		cout << "memo[{" << node << ", " << depth << "}] ì¤‘ë³µ: " << memo[{node, depth}] << endl;
 		return memo[{node, depth}];
 	}
 
 	cout << "memo[{" << node << ", " << depth << "}] = UNKNOWN" << endl;
 
-	//ÇØ´ç depth¿¡¼­ ¹æ¹®ÇÑ Àû ¾ø´Â Á¤Á¡ÀÌ¶ó¸é ÀÏ´Ü UNKNOWNÀ¸·Î ÇÏ°í dist¿Í ºñ±³ÇÑ´Ù.
-	//minÀ» ÅëÇØ¼­ ´õ ÀÛÀº °ªÀ» Ã£¾Æ¾ß ÇÏ±â ¶§¹®¿¡ º§¸¸ Æ÷µå¿¡¼­ Ã³À½¿¡ ¸ðµç °Å¸®¸¦ UNKNOWNÀ¸·Î ÇÏ´Â ¿ø¸®¿Í ºñ½ÁÇÏ´Ù.
+	//í•´ë‹¹ depthì—ì„œ ë°©ë¬¸í•œ ì  ì—†ëŠ” ì •ì ì´ë¼ë©´ ì¼ë‹¨ UNKNOWNìœ¼ë¡œ í•˜ê³  distì™€ ë¹„êµí•œë‹¤.
+	//minì„ í†µí•´ì„œ ë” ìž‘ì€ ê°’ì„ ì°¾ì•„ì•¼ í•˜ê¸° ë•Œë¬¸ì— ë²¨ë§Œ í¬ë“œì—ì„œ ì²˜ìŒì— ëª¨ë“  ê±°ë¦¬ë¥¼ UNKNOWNìœ¼ë¡œ í•˜ëŠ” ì›ë¦¬ì™€ ë¹„ìŠ·í•˜ë‹¤.
 	memo[{node, depth}] = UNKNOWN;
 
-	// ÀÎÁ¢ÇÑ ¿¡Áö¿¡ ´ëÇØ ¹Ýº¹
-	//node¿¡¼­ °¥ ¼ö ÀÖ´Â Á¤Á¡ÀÌ ¿©·¯ °³¶ó¸é memo[{node,depth}]´Â ¾Æ·¡ for¹®À» ÅëÇØ¼­ ¸ðµç °æ·Î¸¦ °è»êÇØ ±× Áß °¡Àå ÀÛÀº °ªÀ¸·Î
-	//Å×ÀÌºíÀ» ¾÷µ¥ÀÌÆ®ÇÒ °ÍÀÌ´Ù.
+	// ì¸ì ‘í•œ ì—ì§€ì— ëŒ€í•´ ë°˜ë³µ
+	//nodeì—ì„œ ê°ˆ ìˆ˜ ìžˆëŠ” ì •ì ì´ ì—¬ëŸ¬ ê°œë¼ë©´ memo[{node,depth}]ëŠ” ì•„ëž˜ forë¬¸ì„ í†µí•´ì„œ ëª¨ë“  ê²½ë¡œë¥¼ ê³„ì‚°í•´ ê·¸ ì¤‘ ê°€ìž¥ ìž‘ì€ ê°’ìœ¼ë¡œ
+	//í…Œì´ë¸”ì„ ì—…ë°ì´íŠ¸í•  ê²ƒì´ë‹¤.
 	for (auto next : adj[node])
 	{
-		//ÀüÄ¡ ±×·¡ÇÁ¿¡¼­ node¿¡¼­ next·Î °¡´Â ¿¡Áö °¡ÁßÄ¡¸¦ ÀÇ¹ÌÇÑ´Ù.
+		//ì „ì¹˜ ê·¸ëž˜í”„ì—ì„œ nodeì—ì„œ nextë¡œ ê°€ëŠ” ì—ì§€ ê°€ì¤‘ì¹˜ë¥¼ ì˜ë¯¸í•œë‹¤.
 		int w = weight[node][next];
-		//¿ª¹æÇâÀ¸·Î °¡´Â ´ÙÀ½ Á¤Á¡ÀÇ °Å¸®°ª¿¡ ÇöÀç ¿¡Áö °¡ÁßÄ¡¸¦ ´õÇÑ´Ù.
-		//ÄÚµå ÃÖ»ó´ÜÀÇ °¡Àå ¸¶Áö¸· ±×·¡ÇÁ¸¦ ÀÔ·ÂÀ¸·Î »ç¿ëÇÒ ¶§¸¦ »ý°¢ÇØº¸ÀÚ.
-		//distance[1]¿¡ ´ëÇÑ Àç±Í¿¡¼­, memoization(1,4)°¡ È£ÃâµÉ °ÍÀÌ°í, 
-		//memo[{1,4}] = UNKNOWNÀ¸·Î ¼³Á¤µÇ°í, memoization(0,3)ÀÌ È£ÃâµÉ °ÍÀÌ´Ù.
-		//¿©±â¼­ memo[{0,3}]Àº 0¿¡¼­ 0À¸·Î °¡´Â °æ¿ì¶ó 0À¸·Î ¼³Á¤µÇ¾î ÀÖ°í Áßº¹ÀÌ¶ó 
-		//0ÀÌ ¸®ÅÏµÈ´Ù. ±×·³ ´Ù½Ã memoization(1,4)·Î ³Ñ¾î°¡¼­ dist°ªÀÌ 3À¸·Î ¼³Á¤µÇ°í(+w·Î ÀÎÇØ¼­)
-		//UNKNOWN°ú 3Áß¿¡ 3ÀÌ ÀÛÀ¸¹Ç·Î 1¿¡¼­ 0À¸·Î °¡´Â °æ¿ì´Â 3À¸·Î ¾÷µ¥ÀÌÆ®µÈ´Ù.
+		//ì—­ë°©í–¥ìœ¼ë¡œ ê°€ëŠ” ë‹¤ìŒ ì •ì ì˜ ê±°ë¦¬ê°’ì— í˜„ìž¬ ì—ì§€ ê°€ì¤‘ì¹˜ë¥¼ ë”í•œë‹¤.
+		//ì½”ë“œ ìµœìƒë‹¨ì˜ ê°€ìž¥ ë§ˆì§€ë§‰ ê·¸ëž˜í”„ë¥¼ ìž…ë ¥ìœ¼ë¡œ ì‚¬ìš©í•  ë•Œë¥¼ ìƒê°í•´ë³´ìž.
+		//distance[1]ì— ëŒ€í•œ ìž¬ê·€ì—ì„œ, memoization(1,4)ê°€ í˜¸ì¶œë  ê²ƒì´ê³ , 
+		//memo[{1,4}] = UNKNOWNìœ¼ë¡œ ì„¤ì •ë˜ê³ , memoization(0,3)ì´ í˜¸ì¶œë  ê²ƒì´ë‹¤.
+		//ì—¬ê¸°ì„œ memo[{0,3}]ì€ 0ì—ì„œ 0ìœ¼ë¡œ ê°€ëŠ” ê²½ìš°ë¼ 0ìœ¼ë¡œ ì„¤ì •ë˜ì–´ ìžˆê³  ì¤‘ë³µì´ë¼ 
+		//0ì´ ë¦¬í„´ëœë‹¤. ê·¸ëŸ¼ ë‹¤ì‹œ memoization(1,4)ë¡œ ë„˜ì–´ê°€ì„œ distê°’ì´ 3ìœ¼ë¡œ ì„¤ì •ë˜ê³ (+wë¡œ ì¸í•´ì„œ)
+		//UNKNOWNê³¼ 3ì¤‘ì— 3ì´ ìž‘ìœ¼ë¯€ë¡œ 1ì—ì„œ 0ìœ¼ë¡œ ê°€ëŠ” ê²½ìš°ëŠ” 3ìœ¼ë¡œ ì—…ë°ì´íŠ¸ëœë‹¤.
 
-		//¶ÇÇÑ memo[{source,0}] = 0ÀÌ ¾Æ´Ï¶ó UNKNOWNÀ¸·Î ¼³Á¤ÇØ¾ß ÇÏ´Â °Í ¾Æ´Ñ°¡ ¶ó°í Âø°¢ÇÒ ¼ö ÀÖ´Âµ¥,
-		//¸¸¾à À§ ±×·¡ÇÁ ¿¹ÀÇ ¸¶Áö¸· ±×·¡ÇÁ¿¡¼­ 4->3ÀÇ ¿¡Áö°¡ Ãß°¡µÈ´Ù¸é 3¿¡¼­ 0±îÁö °¡´Â °Å¸®´Â 4°³ÀÇ ¿¡Áö°¡ µÇ°í
-		//0¿¡ µµÂøÇÒ ¶§ depth = 0ÀÌ µÈ´Ù. µû¶ó¼­ source¿¡ ´ëÇØ¼­´Â 0±îÁö´Â À¯È¿ÇÏ´Ù. ¶ÇÇÑ 0±îÁöÀÇ °Å¸®´Â 4°³ÀÎµ¥ V-1¿¡ ÃæÁ·ÇÏ¹Ç·Î
-		//»çÀÌÅ¬µµ ¾Æ´Ï´Ù.
+		//ë˜í•œ memo[{source,0}] = 0ì´ ì•„ë‹ˆë¼ UNKNOWNìœ¼ë¡œ ì„¤ì •í•´ì•¼ í•˜ëŠ” ê²ƒ ì•„ë‹Œê°€ ë¼ê³  ì°©ê°í•  ìˆ˜ ìžˆëŠ”ë°,
+		//ë§Œì•½ ìœ„ ê·¸ëž˜í”„ ì˜ˆì˜ ë§ˆì§€ë§‰ ê·¸ëž˜í”„ì—ì„œ 4->3ì˜ ì—ì§€ê°€ ì¶”ê°€ëœë‹¤ë©´ 3ì—ì„œ 0ê¹Œì§€ ê°€ëŠ” ê±°ë¦¬ëŠ” 4ê°œì˜ ì—ì§€ê°€ ë˜ê³ 
+		//0ì— ë„ì°©í•  ë•Œ depth = 0ì´ ëœë‹¤. ë”°ë¼ì„œ sourceì— ëŒ€í•´ì„œëŠ” 0ê¹Œì§€ëŠ” ìœ íš¨í•˜ë‹¤. ë˜í•œ 0ê¹Œì§€ì˜ ê±°ë¦¬ëŠ” 4ê°œì¸ë° V-1ì— ì¶©ì¡±í•˜ë¯€ë¡œ
+		//ì‚¬ì´í´ë„ ì•„ë‹ˆë‹¤.
 		int dist = ShortestPath_Memoization(depth - 1, next, adj, weight) + w;
 
-		//ÀÌÀü¿¡ ÀúÀåµÇ¾ú´ø Ä³½Ã¿Í »õ·Ó°Ô °è»êµÈ °Å¸® °ªÀ» ºñ±³ÇÏ¿© ´õ ÀÛÀº °ÍÀ¸·Î ¾÷µ¥ÀÌÆ®
+		//ì´ì „ì— ì €ìž¥ë˜ì—ˆë˜ ìºì‹œì™€ ìƒˆë¡­ê²Œ ê³„ì‚°ëœ ê±°ë¦¬ ê°’ì„ ë¹„êµí•˜ì—¬ ë” ìž‘ì€ ê²ƒìœ¼ë¡œ ì—…ë°ì´íŠ¸
 		memo[{node, depth}] = min(memo[{node, depth}], dist);
 
 		cout << "distance update: " << "memo[{" << node << ", " << depth << "}] = " << memo[{node, depth}] << endl;
@@ -139,72 +143,72 @@ int ShortestPath_Memoization(int depth, int node,
 	return memo[{node, depth}];
 }
 
-//»õ·Î¿î ÇÔ¼ö¸¦ Á¤ÀÇÇÑ´Ù. ÀÌ ÇÔ¼ö´Â ½ÃÀÛ Á¤Á¡ ÀÎµ¦½º¸¦ ³ªÅ¸³»´Â source¸¦ ÀÎÀÚ·Î ¹Þ°í, Á¤¼öÇü º¤ÅÍ¸¦ ¹ÝÈ¯ÇÑ´Ù.
+//ìƒˆë¡œìš´ í•¨ìˆ˜ë¥¼ ì •ì˜í•œë‹¤. ì´ í•¨ìˆ˜ëŠ” ì‹œìž‘ ì •ì  ì¸ë±ìŠ¤ë¥¼ ë‚˜íƒ€ë‚´ëŠ” sourceë¥¼ ì¸ìžë¡œ ë°›ê³ , ì •ìˆ˜í˜• ë²¡í„°ë¥¼ ë°˜í™˜í•œë‹¤.
 vector<int> SingleSourceShortestPaths(int source)
 {
-	//ÀÔ·Â ±×·¡ÇÁ¿¡ ´ëÇØ ¸î °¡Áö ¹Ì¸® ¼öÁ¤ÇÒ °ÍÀÌ ÀÖ´Ù. ½ÃÀÛ Á¤Á¡¿¡¼­ ±×·¡ÇÁÀÇ ´Ù¸¥ Á¤Á¡À¸·Î ÀÌµ¿ÇÏ´Â °Í ´ë½Å, ¿ªÀ¸·Î
-	//°¢°¢ÀÇ Á¤Á¡¿¡¼­ ½ÃÀÛ Á¤Á¡À¸·Î ÀÌµ¿ÇÏ´Â ÃÖ´Ü °æ·Î¸¦ °è»êÇÒ °ÍÀÌ´Ù. ÀÔ·Â ±×·¡ÇÁ°¡ ¹æÇâ ±×·¡ÇÁÀÌ±â ¶§¹®¿¡ ÀÔ·Â ±×·¡ÇÁÀÇ
-	//ÀüÄ¡ ±×·¡ÇÁ¸¦ »ý¼ºÇÏ¿© »ç¿ëÇÑ´Ù.
+	//ìž…ë ¥ ê·¸ëž˜í”„ì— ëŒ€í•´ ëª‡ ê°€ì§€ ë¯¸ë¦¬ ìˆ˜ì •í•  ê²ƒì´ ìžˆë‹¤. ì‹œìž‘ ì •ì ì—ì„œ ê·¸ëž˜í”„ì˜ ë‹¤ë¥¸ ì •ì ìœ¼ë¡œ ì´ë™í•˜ëŠ” ê²ƒ ëŒ€ì‹ , ì—­ìœ¼ë¡œ
+	//ê°ê°ì˜ ì •ì ì—ì„œ ì‹œìž‘ ì •ì ìœ¼ë¡œ ì´ë™í•˜ëŠ” ìµœë‹¨ ê²½ë¡œë¥¼ ê³„ì‚°í•  ê²ƒì´ë‹¤. ìž…ë ¥ ê·¸ëž˜í”„ê°€ ë°©í–¥ ê·¸ëž˜í”„ì´ê¸° ë•Œë¬¸ì— ìž…ë ¥ ê·¸ëž˜í”„ì˜
+	//ì „ì¹˜ ê·¸ëž˜í”„ë¥¼ ìƒì„±í•˜ì—¬ ì‚¬ìš©í•œë‹¤.
 	vector<vector<int>> adj_t(V);
 	vector<vector<int>> weight_t(V, vector<int>(V, UNKNOWN));
 
-	//¸ðµç Á¤Á¡¿¡ ´ëÇÑ °ÍÀÌ ±â·ÏµÇ´Â °ÍÀÌ ¾Æ´Ï¶ó ÇÏ³ªÀÇ ½ÃÀÛ ÁöÁ¡¿¡ ´ëÇÑ °æ·Î¸¦ ÀúÀåÇÏ±â ¶§¹®¿¡
-	//°¢ Á¤Á¡¿¡ ´ëÇØ ÇÔ¼ö°¡ È£ÃâµÉ ¶§ memo¸¦ ºñ¿öÁØ´Ù. Áï source°¡ 0ÀÏ ¶§´Â 0¿¡ ´ëÇÑ °ªµé¸¸ ÀúÀåµÈ´Ù.
-	//memo[{source, i}]´Â 0¿¡¼­ Ãâ¹ßÇÏ¿© 0À¸·Î °£´Ù´Â ÀÌ¾ß±âÀÌ´Ù. µû¶ó¼­ 0ÀÌ´Ù.
-	//source°¡ 1ÀÏ ¶§´Â memo[{source,i}]´Â 1¿¡¼­ Ãâ¹ßÇÏ¿© 1·Î °£´Ù´Â ÀÌ¾ß±â´Ï±î 0ÀÌ´Ù.
-	//i´Â source¿¡ ´ëÇÑ ¸ðµç Á¤Á¡ÀÇ ÃÖ´Ü °Å¸®¸¦ °è»êÇÒ ¶§ÀÇ ¹Ýº¹ È½¼ö¸¦ ÀÇ¹ÌÇÑ´Ù. ¹Ýº¹ º¯¼ö°¡ °¨¼ÒÇÏ´Ù°¡
-	//depth±îÁö ¿À¸é ÇØ´ç °æ·Î´Â ¾ø´Â °ÍÀ¸·Î °£ÁÖÇÑ´Ù. Áï V-1¹ø ¹Ýº¹À» ÇØµµ ½ÃÀÛ Á¤Á¡À¸·Î °Å²Ù·Î µµ´ÞÇÒ ¼ö ¾ø´Ù´Â ÀÌ¾ß±âÀÌ´Ù.
+	//ëª¨ë“  ì •ì ì— ëŒ€í•œ ê²ƒì´ ê¸°ë¡ë˜ëŠ” ê²ƒì´ ì•„ë‹ˆë¼ í•˜ë‚˜ì˜ ì‹œìž‘ ì§€ì ì— ëŒ€í•œ ê²½ë¡œë¥¼ ì €ìž¥í•˜ê¸° ë•Œë¬¸ì—
+	//ê° ì •ì ì— ëŒ€í•´ í•¨ìˆ˜ê°€ í˜¸ì¶œë  ë•Œ memoë¥¼ ë¹„ì›Œì¤€ë‹¤. ì¦‰ sourceê°€ 0ì¼ ë•ŒëŠ” 0ì— ëŒ€í•œ ê°’ë“¤ë§Œ ì €ìž¥ëœë‹¤.
+	//memo[{source, i}]ëŠ” 0ì—ì„œ ì¶œë°œí•˜ì—¬ 0ìœ¼ë¡œ ê°„ë‹¤ëŠ” ì´ì•¼ê¸°ì´ë‹¤. ë”°ë¼ì„œ 0ì´ë‹¤.
+	//sourceê°€ 1ì¼ ë•ŒëŠ” memo[{source,i}]ëŠ” 1ì—ì„œ ì¶œë°œí•˜ì—¬ 1ë¡œ ê°„ë‹¤ëŠ” ì´ì•¼ê¸°ë‹ˆê¹Œ 0ì´ë‹¤.
+	//iëŠ” sourceì— ëŒ€í•œ ëª¨ë“  ì •ì ì˜ ìµœë‹¨ ê±°ë¦¬ë¥¼ ê³„ì‚°í•  ë•Œì˜ ë°˜ë³µ íšŸìˆ˜ë¥¼ ì˜ë¯¸í•œë‹¤. ë°˜ë³µ ë³€ìˆ˜ê°€ ê°ì†Œí•˜ë‹¤ê°€
+	//depthê¹Œì§€ ì˜¤ë©´ í•´ë‹¹ ê²½ë¡œëŠ” ì—†ëŠ” ê²ƒìœ¼ë¡œ ê°„ì£¼í•œë‹¤. ì¦‰ V-1ë²ˆ ë°˜ë³µì„ í•´ë„ ì‹œìž‘ ì •ì ìœ¼ë¡œ ê±°ê¾¸ë¡œ ë„ë‹¬í•  ìˆ˜ ì—†ë‹¤ëŠ” ì´ì•¼ê¸°ì´ë‹¤.
 	memo.clear();
 
-	//¿©±â¼­ ÀüÄ¡ ±×·¡ÇÁÀÇ ÀÎÁ¢ ¸®½ºÆ®¿Í °¡ÁßÄ¡ Çà·ÄÀ» ³ªÅ¸³»±â À§ÇØ µÎ °³ÀÇ 2Â÷¿ø Á¤¼ö º¤ÅÍ adj_t¿Í weight_t¸¦ Á¤ÀÇÇß´Ù.
-	//ÀÌÈÄ ÁßÃ¸ for¹®À» ÀÌ¿ëÇÏ¿© ÀüÄ¡ ±×·¡ÇÁ¸¦ »ý¼ºÇÏ°í memo Å×ÀÌºíÀ» ÃÊ±âÈ­Çß´Ù.
+	//ì—¬ê¸°ì„œ ì „ì¹˜ ê·¸ëž˜í”„ì˜ ì¸ì ‘ ë¦¬ìŠ¤íŠ¸ì™€ ê°€ì¤‘ì¹˜ í–‰ë ¬ì„ ë‚˜íƒ€ë‚´ê¸° ìœ„í•´ ë‘ ê°œì˜ 2ì°¨ì› ì •ìˆ˜ ë²¡í„° adj_tì™€ weight_të¥¼ ì •ì˜í–ˆë‹¤.
+	//ì´í›„ ì¤‘ì²© forë¬¸ì„ ì´ìš©í•˜ì—¬ ì „ì¹˜ ê·¸ëž˜í”„ë¥¼ ìƒì„±í•˜ê³  memo í…Œì´ë¸”ì„ ì´ˆê¸°í™”í–ˆë‹¤.
 	for (int i = 0; i < V; i++)
 	{
 		cout << "source: " << source << endl << endl;
-		// ÀüÄ¡ ±×·¡ÇÁ »ý¼º
-		//°¢ ¹Ýº¹¿¡¼­ °¢ Á¤Á¡ÀÇ ÀÎÁ¢ Á¤Á¡µé¸¸ ÀüÄ¡½ÃÅ²´Ù.
-		//ÇÑ ¹ø¿¡ ¸ðµç ±×·¡ÇÁ¸¦ ÀüÄ¡½ÃÅ°´Â °ÍÀÌ ¾Æ´Ï´Ù.
+		// ì „ì¹˜ ê·¸ëž˜í”„ ìƒì„±
+		//ê° ë°˜ë³µì—ì„œ ê° ì •ì ì˜ ì¸ì ‘ ì •ì ë“¤ë§Œ ì „ì¹˜ì‹œí‚¨ë‹¤.
+		//í•œ ë²ˆì— ëª¨ë“  ê·¸ëž˜í”„ë¥¼ ì „ì¹˜ì‹œí‚¤ëŠ” ê²ƒì´ ì•„ë‹ˆë‹¤.
 		for (auto j : adj[i])
 		{
-			cout << i << " Á¤Á¡" << endl;
+			cout << i << " ì •ì " << endl;
 			adj_t[j].push_back(i);
 			weight_t[j][i] = weight[i][j];
-			cout << "¿¡Áö ÀüÄ¡ ÁøÇà" << endl;
+			cout << "ì—ì§€ ì „ì¹˜ ì§„í–‰" << endl;
 			cout << endl;
 		}
-		cout << "ÀüÄ¡ Á¾·á" << endl << endl;
-		// ±âÀú Á¶°Ç - ½ÃÀÛ Á¤Á¡¿¡¼­ ÀÚ±â ÀÚ½Å±îÁöÀÇ ÃÖ´Ü °Å¸®´Â Ç×»ó 0
-		//°¢ ¹Ýº¹¿¡¼­ ½ÃÀÛ Á¤Á¡¿¡¼­ ÀÚ±â ÀÚ½Å±îÁöÀÇ ÃÖ´Ü °Å¸®´Â Ç×»ó 0ÀÌ´Ù.
+		cout << "ì „ì¹˜ ì¢…ë£Œ" << endl << endl;
+		// ê¸°ì € ì¡°ê±´ - ì‹œìž‘ ì •ì ì—ì„œ ìžê¸° ìžì‹ ê¹Œì§€ì˜ ìµœë‹¨ ê±°ë¦¬ëŠ” í•­ìƒ 0
+		//ê° ë°˜ë³µì—ì„œ ì‹œìž‘ ì •ì ì—ì„œ ìžê¸° ìžì‹ ê¹Œì§€ì˜ ìµœë‹¨ ê±°ë¦¬ëŠ” í•­ìƒ 0ì´ë‹¤.
 		cout << "memo[{" << source << " , " << i << "}] = 0" << endl;
 		memo[{source, i}] = 0;
 
 		if (i != source)
 		{
-			//¹Ýº¹À» ÁøÇàÇÏ´Ù°¡ source¿¡¼­ i·Î °¥ ¶§ depth°¡ 0ÀÌ¶ó¸é °æ·Î´Â ¾ø´Â °ÍÀÌ´Ù.
-			//´Ù½Ã ¸»ÇÏ¸é source¿¡¼­ i·Î °¡±â À§ÇØ¼­ ¹Ýº¹À» ÁøÇàÇÏ´Â µ¥ depth°¡ 0ÀÌ µÇ¸é UNKNOWNÀÌ¶ó´Â ¸»ÀÌ´Ù.
-			// V-1 ¹Ýº¹ ÈÄ ¼Ò½º ÀÌ¿ÜÀÇ ³ëµå¿¡ µµ´ÞÇÑ °æ¿ì,
-			// °æ·Î°¡ Á¸ÀçÇÏÁö ¾ÊÀ½
+			//ë°˜ë³µì„ ì§„í–‰í•˜ë‹¤ê°€ sourceì—ì„œ ië¡œ ê°ˆ ë•Œ depthê°€ 0ì´ë¼ë©´ ê²½ë¡œëŠ” ì—†ëŠ” ê²ƒì´ë‹¤.
+			//ë‹¤ì‹œ ë§í•˜ë©´ sourceì—ì„œ ië¡œ ê°€ê¸° ìœ„í•´ì„œ ë°˜ë³µì„ ì§„í–‰í•˜ëŠ” ë° depthê°€ 0ì´ ë˜ë©´ UNKNOWNì´ë¼ëŠ” ë§ì´ë‹¤.
+			// V-1 ë°˜ë³µ í›„ ì†ŒìŠ¤ ì´ì™¸ì˜ ë…¸ë“œì— ë„ë‹¬í•œ ê²½ìš°,
+			// ê²½ë¡œê°€ ì¡´ìž¬í•˜ì§€ ì•ŠìŒ
 			cout << i << " != " << source << endl;
-			//°¢ Á¤Á¡¿¡¼­ °Å²Ù·Î ½ÃÀÛ Á¤Á¡À¸·Î °¡´Â °ÍÀ» ±â·ÏÇÏ´Â °ÍÀÌ±â ¶§¹®¿¡ ÇöÀç ¹Ýº¹¹®¿¡¼­
-			//source°¡ ¾Æ´Ñ ¸ðµç Á¤Á¡¿¡ ´ëÇØ depth 0¿¡ ´ëÇØ¼­ UNKNOWN ÀÛ¾÷À» ÇØÁÖ·Á°í ÇÏ´Â °ÍÀÌ´Ù.
-			//°Å²Ù·Î °¡´Â °ÍÀÌ±â ¶§¹®¿¡ source°¡ ¾Æ´Ñ ´Ù¸¥ °ªÀº ÀüºÎ °æ·Î°¡ ¾ø´Â °ÍÀÌ´Ù.
+			//ê° ì •ì ì—ì„œ ê±°ê¾¸ë¡œ ì‹œìž‘ ì •ì ìœ¼ë¡œ ê°€ëŠ” ê²ƒì„ ê¸°ë¡í•˜ëŠ” ê²ƒì´ê¸° ë•Œë¬¸ì— í˜„ìž¬ ë°˜ë³µë¬¸ì—ì„œ
+			//sourceê°€ ì•„ë‹Œ ëª¨ë“  ì •ì ì— ëŒ€í•´ depth 0ì— ëŒ€í•´ì„œ UNKNOWN ìž‘ì—…ì„ í•´ì£¼ë ¤ê³  í•˜ëŠ” ê²ƒì´ë‹¤.
+			//ê±°ê¾¸ë¡œ ê°€ëŠ” ê²ƒì´ê¸° ë•Œë¬¸ì— sourceê°€ ì•„ë‹Œ ë‹¤ë¥¸ ê°’ì€ ì „ë¶€ ê²½ë¡œê°€ ì—†ëŠ” ê²ƒì´ë‹¤.
 
-			//depth°¡ 0À¸·Î °¨¼ÒÇÏ¸é °æ·Î°¡ Á¸ÀçÇÏÁö ¾Ê´Â °ÍÀ¸·Î ¼³Á¤ÇÑ´Ù.
-			//µû¶ó¼­ source¿ÜÀÇ Á¤Á¡¿¡ µµ´ÞÇÑ´Ù¸é depth 0¿¡ ÇØ´çÇÏ´Â pair¸¦ UNKNOWNÀ¸·Î ¼³Á¤ÇÑ´Ù.
+			//depthê°€ 0ìœ¼ë¡œ ê°ì†Œí•˜ë©´ ê²½ë¡œê°€ ì¡´ìž¬í•˜ì§€ ì•ŠëŠ” ê²ƒìœ¼ë¡œ ì„¤ì •í•œë‹¤.
+			//ë”°ë¼ì„œ sourceì™¸ì˜ ì •ì ì— ë„ë‹¬í•œë‹¤ë©´ depth 0ì— í•´ë‹¹í•˜ëŠ” pairë¥¼ UNKNOWNìœ¼ë¡œ ì„¤ì •í•œë‹¤.
 			memo[{i, 0}] = UNKNOWN;
 			cout << "memo[{" << i << ", 0}] = UNKNOWN" << endl << endl;
 		}
 	}
 
-	//Å©±â°¡ VÀÎ Á¤¼ö º¤ÅÍ distance¸¦ Á¤ÀÇÇÑ´Ù. ±×¸®°í ÀÌ º¤ÅÍ¸¦ memoizationÇÔ¼ö ¹ÝÈ¯°ªÀ¸·Î Ã¤¿î´Ù.
+	//í¬ê¸°ê°€ Vì¸ ì •ìˆ˜ ë²¡í„° distanceë¥¼ ì •ì˜í•œë‹¤. ê·¸ë¦¬ê³  ì´ ë²¡í„°ë¥¼ memoizationí•¨ìˆ˜ ë°˜í™˜ê°’ìœ¼ë¡œ ì±„ìš´ë‹¤.
 	vector<int> distance(V);
 
 	for (int i = 0; i < V; i++)
 	{
-		//0ºÎÅÍ ½ÃÀÛÇØ¼­ V-1¹ø ¹Ýº¹ÇÑ´Ù. Àü´ÞµÇ´Â Ã¹ ¹øÂ° ¸Å°³º¯¼ö´Â DepthÀÌ´Ù.
-		//µÎ ¹øÂ° ¸Å°³º¯¼ö´Â 
+		//0ë¶€í„° ì‹œìž‘í•´ì„œ V-1ë²ˆ ë°˜ë³µí•œë‹¤. ì „ë‹¬ë˜ëŠ” ì²« ë²ˆì§¸ ë§¤ê°œë³€ìˆ˜ëŠ” Depthì´ë‹¤.
+		//ë‘ ë²ˆì§¸ ë§¤ê°œë³€ìˆ˜ëŠ” 
 
-		//source°¡ 0ÀÏ ¶§ distance[0]=0ÀÌ´Ù.
+		//sourceê°€ 0ì¼ ë•Œ distance[0]=0ì´ë‹¤.
 		cout << i << "Called" << endl << endl << endl;
 		distance[i] = ShortestPath_Memoization(V - 1, i, adj_t, weight_t);
 	}
@@ -212,16 +216,16 @@ vector<int> SingleSourceShortestPaths(int source)
 	return distance;
 }
 
-//¸ÞÀÎÇÔ¼ö¿¡¼­ ÀÔ·ÂÀ» Ã³¸®ÇÏ¿© ¾Ë°í¸®ÁòÀ» Àû¿ëÇÒ ±×·¡ÇÁ ±¸Á¶¸¦ »ý¼ºÇÑ´Ù. Ã¹ ¹øÂ° ÁÙ¿¡¼­´Â V¿Í E¸¦ ÀÔ·ÂÀ¸·Î ¹Þ°í,
-//ÀÌÈÄ E°³ÀÇ ÁÙ¿¡¼­´Â u,v,w¸¦ ³ªÅ¸³»´Â Á¤¼ö¸¦ ÀÔ·ÂÀ¸·Î ¹Þ´Â´Ù. ¿©±â¼­ u,v,w´Â ½ÃÀÛ Á¤Á¡, ¸ñÇ¥ Á¤Á¡, µÎ Á¤Á¡ »çÀÌÀÇ °¡ÁßÄ¡¸¦ ³ªÅ¸³½´Ù.
+//ë©”ì¸í•¨ìˆ˜ì—ì„œ ìž…ë ¥ì„ ì²˜ë¦¬í•˜ì—¬ ì•Œê³ ë¦¬ì¦˜ì„ ì ìš©í•  ê·¸ëž˜í”„ êµ¬ì¡°ë¥¼ ìƒì„±í•œë‹¤. ì²« ë²ˆì§¸ ì¤„ì—ì„œëŠ” Vì™€ Eë¥¼ ìž…ë ¥ìœ¼ë¡œ ë°›ê³ ,
+//ì´í›„ Eê°œì˜ ì¤„ì—ì„œëŠ” u,v,wë¥¼ ë‚˜íƒ€ë‚´ëŠ” ì •ìˆ˜ë¥¼ ìž…ë ¥ìœ¼ë¡œ ë°›ëŠ”ë‹¤. ì—¬ê¸°ì„œ u,v,wëŠ” ì‹œìž‘ ì •ì , ëª©í‘œ ì •ì , ë‘ ì •ì  ì‚¬ì´ì˜ ê°€ì¤‘ì¹˜ë¥¼ ë‚˜íƒ€ë‚¸ë‹¤.
 int main()
 {
 	cin >> V >> E;
 
-	//°¡ÁßÄ¡ Ç¥Çö
+	//ê°€ì¤‘ì¹˜ í‘œí˜„
 	weight.resize(V, vector<int>(V, UNKNOWN));
 
-	//±×·¡ÇÁ °£ÀÇ ¿¬°á Ç¥Çö
+	//ê·¸ëž˜í”„ ê°„ì˜ ì—°ê²° í‘œí˜„
 	adj.resize(V);
 
 	for (int i = 0; i < E; i++)
@@ -233,7 +237,7 @@ int main()
 		weight[u][v] = w;
 	}
 
-	//2Â÷¿ø Á¤¼ö º¤ÅÍ path¸¦ Á¤ÀÇÇÑ´Ù. ±×¸®°í 0¹ø ºÎÅÍ V-1¹ø Á¤Á¡¿¡ ´ëÇØ ÇÔ¼ö ¹ÝÈ¯°ªÀ¸·Î Ã¤¿î´Ù.
+	//2ì°¨ì› ì •ìˆ˜ ë²¡í„° pathë¥¼ ì •ì˜í•œë‹¤. ê·¸ë¦¬ê³  0ë²ˆ ë¶€í„° V-1ë²ˆ ì •ì ì— ëŒ€í•´ í•¨ìˆ˜ ë°˜í™˜ê°’ìœ¼ë¡œ ì±„ìš´ë‹¤.
 	vector<vector<int>> paths(V);
 
 	for (int i = 0; i < V; i++)
@@ -241,7 +245,7 @@ int main()
 		paths[i] = SingleSourceShortestPaths(i);
 	}
 
-	cout << "°¢ Á¤Á¡ »çÀÌÀÇ ÃÖ´Ü °Å¸®:" << endl;
+	cout << "ê° ì •ì  ì‚¬ì´ì˜ ìµœë‹¨ ê±°ë¦¬:" << endl;
 
 	for (int i = 0; i < V; i++)
 	{
