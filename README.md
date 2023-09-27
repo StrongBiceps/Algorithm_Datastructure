@@ -4007,7 +4007,7 @@ STL unordered_map 컨테이너를 사용하여 긴 길이의 URL을 짧은 길�
 
 <Selection_Sort>
 
-'''
+'''cpp
 function selectionSort(array A)
     for i from 1 to length[A]-1 do 
         minIndex = i   
