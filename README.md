@@ -4000,3 +4000,48 @@ STL unordered_map 컨테이너를 사용하여 긴 길이의 URL을 짧은 길�
 시퀀스의 일부만 정렬이 필요할 때 사용할 수 있다. 예를 들어 10000개의 데이터 중에서 상위 10퍼센트의 정렬된 값이 필요하다면 나머지 90퍼센트는 정렬할 필요가 없다.
 
 모든 원소를 정렬한다면 시간 낭비일 것이다. 따라서 부분 퀵 정렬을 사용하여 상위 10퍼센트정도만 정렬하여 원하는 값을 얻을 수 있을 것이다.
+
+# 2023.09.27
+
+# Selection_Sort & Insertion_Sort
+
+<Selection_Sort>
+
+function selectionSort(array A)
+    for i from 1 to length[A]-1 do 
+        minIndex = i   
+        for j from i+1 to length[A] do  
+            if A[j] < A[minIndex] then   
+                minIndex = j  
+            end if   
+        end for   
+        
+        if minIndex != i then   
+            swap(A[i],A[minIndex])  
+        end if  
+    end for  
+end function
+
+최선의 경우: O(n^2)
+
+최악의 경우: O(n^2)
+
+<Insertion_Sort>
+
+function insertionSort(array A)
+    for i from 2 to length[A] do
+        key = A[i]
+        j = i - 1
+        while j > 0 and A[j] > key do
+            A[j + 1] = A[j]
+            j = j - 1
+        end while
+        A[j + 1] = key 
+    end for 
+end function 
+
+최선의 경우: O(n)
+
+최악의 경우: O(n^2)
+
+시간 복잡도를 보면 삽입 정렬이 최선의 경우에는 더 효율적인 것을 확인할 수 있다.
