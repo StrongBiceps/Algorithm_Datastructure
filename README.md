@@ -4007,6 +4007,7 @@ STL unordered_map 컨테이너를 사용하여 긴 길이의 URL을 짧은 길�
 
 <Selection_Sort>
 
+[
 function selectionSort(array A)
     for i from 1 to length[A]-1 do 
         minIndex = i   
@@ -4021,6 +4022,7 @@ function selectionSort(array A)
         end if  
     end for  
 end function
+]
 
 최선의 경우: O(n^2)
 
@@ -4028,6 +4030,7 @@ end function
 
 <Insertion_Sort>
 
+[
 function insertionSort(array A)
     for i from 2 to length[A] do
         key = A[i]
@@ -4039,6 +4042,7 @@ function insertionSort(array A)
         A[j + 1] = key 
     end for 
 end function 
+]
 
 최선의 경우: O(n)
 
