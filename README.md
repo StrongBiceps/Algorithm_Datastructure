@@ -4030,7 +4030,7 @@ end function
 
 <Insertion_Sort>
 
-'''
+```cpp
 function insertionSort(array A)
     for i from 2 to length[A] do
         key = A[i]
@@ -4042,7 +4042,7 @@ function insertionSort(array A)
         A[j + 1] = key 
     end for 
 end function 
-'''
+```
 
 최선의 경우: O(n)
 
