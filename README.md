@@ -1037,7 +1037,6 @@ vector<int> Generate(int n)
 
 
 		distance[i] = (( val % 10000) % (n-i)) + 1;
-	
 	}
 
 	return distance;
@@ -1116,6 +1115,9 @@ F(i) =
    
 	return result
 }
+
+//아래 예에서 위 코드를 분석하자면, i = 2일 때 2에서 5로 가는 경우의 수는 F(3) + F(4) + F(5)가 된다. 2의 거리가 3이기 때문이다.
+//F(3)을 계산해보면 1이 나오는데 결국 3->4->5의 경로를 의미한다.
 
 *top down solution
 
