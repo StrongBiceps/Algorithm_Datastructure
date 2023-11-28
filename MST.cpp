@@ -40,6 +40,7 @@ public:
 	{
 		nodes.emplace_back(x);
 	}
+	/find 연산이고, 서로 부모가 같은 지를 확인하는 연산이다.
 	unsigned find(const unsigned& x)
 	{
 		auto node_it = find_if(nodes.begin(), nodes.end(),
