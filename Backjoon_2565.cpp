@@ -1,7 +1,3 @@
-#include <iostream>
-#include <algorithm>
-using namespace std;
-
 //이 문제의 핵심은 최장 길이 증가하는 부분 수열을 구하는 문제와 다를 것이 없다. 하지만 생각이 그 논리까지 도달하는 것이
 
 //어려웠던 문제이다. 
@@ -15,46 +11,50 @@ using namespace std;
 //감소하는 수열이 있으면 반드시 겹치게 된다. 따라서 제거해야만 한다. 결국 겹치지 않게 전깃줄을 제거하는 최소 갯수는
 
 //최장 길이 증가 부분 수열을 뺀 값이 된다.
-class Line
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+struct Line
 {
-public:
-	int A = 0;
-	int B = 0;
+    int A = 0;
+    int B = 0;
 };
 
-int N;
+bool comp(Line& lA, Line& lB)
+{
+    return lA.A < lB.A;
+}
+
+Line line[100];
 int DP[100] = { 0 };
-Line line[100] = { 0 };
+
 int Result = 0;
 
-bool Comp(Line& Temp1, Line& Temp2)
-{
-	return Temp1.A < Temp2.A;
-}
+int N;
 
 int main()
 {
-	cin >> N;
+    cin >> N;
 
-	for (int i = 0; i < N; ++i)
-	{
-		cin >> line[i].A >> line[i].B;
-	}
+    for (int i = 0; i < N; ++i)
+    {
+        cin >> line[i].A >> line[i].B;
+    }
 
-	sort(line, line + N - 1, Comp);
+    sort(line, line + N - 1, comp);
 
-	for (int i = 0; i < N; ++i)
-	{
-		for (int j = 0; j < i; ++j)
-		{
-			if (line[i].B > line[j].B)
-			{
-				DP[i] = max(DP[i], DP[j] + 1);
-			}
-		}
+    for (int i = 0; i < N; ++i)
+    {
+        DP[i] = 1;
+        for (int j = 0; j < i; ++j)
+        {
+            if (line[i].B > line[j].B)
+                DP[i] = max(DP[i], DP[j] + 1);
+        }
 
-		Result = max(Result, DP[i]);
-	}
+        Result = max(Result, DP[i]);
+    }
 
-	cout << Result - N;
+    cout << N - Result;
 }
