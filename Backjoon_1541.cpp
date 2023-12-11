@@ -38,3 +38,57 @@ int main() {
 
     cout << result;
 }
+
+//나의 다른 풀이 (오직 내 생각) 로직은 위 코드와 동일.
+#include <iostream>
+#include <string>
+using namespace std;
+
+string expression;
+int Result = 0;
+bool Min = false;
+int Next = 0;
+
+int main()
+{
+    cin >> expression;
+    string Temp;
+
+    for (int i = 0; i < expression.size(); ++i)
+    {
+        if (expression[i] == '+')
+        {
+            if (Min == false)
+                Result += stoi(expression.substr(Next, i));
+            else
+                Result -= stoi(expression.substr(Next, i));
+            Next = i + 1;
+            Temp = "";
+        }
+        else if (expression[i] == '-')
+        {
+            if (Min == false)
+                Result += stoi(expression.substr(Next, i));
+            else
+                Result -= stoi(expression.substr(Next, i));
+
+            if (Min == false)
+                Min = true;
+
+            Next = i + 1;
+            Temp = "";
+        }
+        else
+        {
+            Temp += expression[i];
+        }
+    }
+
+    if (Min == false)
+        Result += stoi(expression.substr(Next, expression.size()));
+    else
+        Result -= stoi(expression.substr(Next, expression.size()));
+
+
+    cout << Result;
+}
