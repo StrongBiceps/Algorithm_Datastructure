@@ -42,7 +42,7 @@ int main()
         cin >> line[i].A >> line[i].B;
     }
 
-    sort(line, line + N - 1, comp);
+    sort(line, line + N , comp);
 
     for (int i = 0; i < N; ++i)
     {

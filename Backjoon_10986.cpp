@@ -1,10 +1,3 @@
-#include <iostream>
-using namespace std;
-
-long long Mod[1001] = { 0 };
-int N, M;
-int cnt = 0;
-
 //모듈로 연산의 특성을 이용한 문제이다.
 
 //Area(i+1,j) = Psum(j) - Psum(i) 임은 자명하다.
@@ -25,27 +18,35 @@ int cnt = 0;
 
 //모두 M으로 나누어 떨어진다. 즉, 이들의 조합을 사용해서 경우의 수를 구하고, 각자 혼자 존재하는 경우의 수도 함께 더해야 한다.
 
+#include <iostream>
+using namespace std;
+
+long long Mod[1001] = { 0 };
+int N, M;
+long long Total = 0;
+
 int main()
 {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
     cin >> N >> M;
 
-    long long Sum = 0;
-    long long Input = 0;
+    long long number = { 0 };
+    long long Result = 0;
 
-    for (int i = 1; i <= N; ++i)
+    for (int i = 0; i < N; ++i)
     {
-        cin >> Input;
-
-        Sum += Input;
-
-        ++Mod[Sum % M];
+        cin >> number;
+        Result += number;
+        ++Mod[Result % M];
     }
 
     for (int i = 0; i < M; ++i)
     {
-        cnt += (Mod[i] * (Mod[i] - 1)) / 2;
+        Total += (Mod[i] * (Mod[i] - 1)) / 2;
     }
-    cnt += Mod[0];
+    Total += Mod[0];
 
-    cout << cnt;
+    cout << Total;
 }
